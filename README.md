@@ -4,6 +4,74 @@ Simple Python scripts for managing GitHub repository permissions in Devin Enterp
 
 ## Overview
 
+```mermaid
+---
+config:
+  theme: neutral
+---
+flowchart LR
+ subgraph SubOrg1["CDO Org"]
+        DW1["DeepWiki"]
+        S1["Sessions"]
+  end
+ subgraph SubOrg2["CIO Org"]
+        DW2["DeepWiki"]
+        S2["Sessions"]
+  end
+ subgraph SubOrg3["COO Org"]
+        DW3["DeepWiki"]
+        S3["Sessions"]
+  end
+ subgraph MainOrg["Devin"]
+    direction TB
+        SubOrg1
+        SubOrg2
+        SubOrg3
+        GH1["GH Connection"]
+        GH2["GH Connection"]
+        GH3["GH Connection"]
+  end
+ subgraph Repos1["Repos"]
+  end
+ subgraph SubOrgA["CDO Org"]
+        App1["App"]
+        Repos1
+  end
+ subgraph Repos2["Repos"]
+  end
+ subgraph SubOrgB["CIO Org"]
+        App2["App"]
+        Repos2
+  end
+ subgraph Repos3["Repos"]
+  end
+ subgraph SubOrgC["COO Org"]
+        App3["App"]
+        Repos3
+  end
+ subgraph CloudOrg["GitHub Enterprise"]
+    direction TB
+        SubOrgA
+        SubOrgB
+        SubOrgC
+  end
+    App1 -- repos --> GH1
+    App2 -- repos --> GH2
+    App3 -- repos --> GH3
+    GH1 -- repository 
+  permissions --> DW1
+    GH2 -- repository
+  permissions --> DW2
+    GH3 -- repository
+  permissions --> DW3
+    DW1 -- index --> S1
+    DW2 -- index --> S2
+    DW3 -- index --> S3
+    Repos1 -- select repos --> App1
+    Repos2 -- select repos --> App2
+    Repos3 -- select repos --> App3
+```
+
 ### Step 1: Set up GitHub Connections (Manual)
 
 Each [GitHub organization](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-organizations-in-your-enterprise/adding-organizations-to-your-enterprise#creating-a-new-organization) needs to be manually added as a [connection in Devin](https://docs.devin.ai/integrations/gh#setting-up-the-integration):
