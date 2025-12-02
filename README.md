@@ -100,7 +100,7 @@ Once GitHub connections are set up, use these scripts to programmatically manage
 
 After granting permissions, index the repositories to make them available as [Deep Wikis](https://docs.devin.ai/work-with-devin/deepwiki) for use in Devin sessions. Indexing allows Devin to understand and work with the repository codebase. This can also be done manually in the org settings page.
 
-### Step 4: Set Up Machine Snapshots (Optional, Manual)
+### Step 4: Set Up Machine Snapshots (Manual) (Not a Hard Requirement to Run Sessions)
 
 For repositories with specific build tools, dependencies, and environment configurations, you can set up machine snapshots through the Devin UI. This creates a pre-configured virtual machine environment that Devin uses as the starting point for each session. Configure through **Settings > Devin's Workspace** in the Devin app. See the [Repo Setup Guide](https://docs.devin.ai/onboard-devin/repo-setup) for details.
 
