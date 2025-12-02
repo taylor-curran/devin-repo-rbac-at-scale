@@ -18,15 +18,20 @@ flowchart LR
         DW2["DeepWiki"]
         S2["Sessions"]
   end
- subgraph SubOrg3["COO Org"]
-        DW3["DeepWiki"]
-        S3["Sessions"]
+ subgraph SubOrg3A["COO Team A"]
+        DW3A["DeepWiki"]
+        S3A["Sessions"]
+  end
+ subgraph SubOrg3B["COO Team B"]
+        DW3B["DeepWiki"]
+        S3B["Sessions"]
   end
  subgraph MainOrg["Devin"]
     direction TB
         SubOrg1
         SubOrg2
-        SubOrg3
+        SubOrg3A
+        SubOrg3B
         GH1["GH Connection"]
         GH2["GH Connection"]
         GH3["GH Connection"]
@@ -63,10 +68,13 @@ flowchart LR
     GH2 -- repository
   permissions --> DW2
     GH3 -- repository
-  permissions --> DW3
+  permissions --> DW3A
+    GH3 -- repository
+  permissions --> DW3B
     DW1 -- index --> S1
     DW2 -- index --> S2
-    DW3 -- index --> S3
+    DW3A -- index --> S3A
+    DW3B -- index --> S3B
     Repos1 -- select repos --> App1
     Repos2 -- select repos --> App2
     Repos3 -- select repos --> App3
