@@ -5,62 +5,71 @@ Simple Python scripts for managing GitHub repository permissions in Devin Enterp
 ## Overview
 
 ```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'background': '#e6f3ff'}}}%%
+---
+config:
+  theme: neutral
+---
 flowchart LR
-  %% First block of blocks
-  subgraph MainOrg["Devin"]
-    direction TB
-    subgraph SubOrg1["CDO Org"]
-      DW1["DeepWiki"]
-      S1["Sessions"]
-    end
-    subgraph SubOrg2["CIO Org"]
-      DW2["DeepWiki"]
-      S2["Sessions"]
-    end
-    subgraph SubOrg3["COO Org"]
-      DW3["DeepWiki"]
-      S3["Sessions"]
-    end
-    GH1["GH Connection"]
-    GH2["GH Connection"]
-    GH3["GH Connection"]
+ subgraph SubOrg1["CDO Org"]
+        DW1["DeepWiki"]
+        S1["Sessions"]
   end
-
-  %% Second block of blocks
-  subgraph CloudOrg["GitHub Enterprise"]
-    direction TB
-    subgraph SubOrgA["CDO Org"]
-      App1["App"]
-      subgraph Repos1["Repos"]
-      end
-    end
-    subgraph SubOrgB["CIO Org"]
-      App2["App"]
-      subgraph Repos2["Repos"]
-      end
-    end
-    subgraph SubOrgC["COO Org"]
-      App3["App"]
-      subgraph Repos3["Repos"]
-      end
-    end
+ subgraph SubOrg2["CIO Org"]
+        DW2["DeepWiki"]
+        S2["Sessions"]
   end
-
-  %% App -> GH Connection (repos)
-  App1 -->|repos| GH1
-  App2 -->|repos| GH2
-  App3 -->|repos| GH3
-
-  %% GH Connection -> DeepWiki (permissions)
-  GH1 -->|permissions| DW1
-  GH2 -->|permissions| DW2
-  GH3 -->|permissions| DW3
-
-  %% DeepWiki -> Sessions (Indexed Code)
-  DW1 -->|Indexed Code| S1
-  DW2 -->|Indexed Code| S2
-  DW3 -->|Indexed Code| S3
+ subgraph SubOrg3["COO Org"]
+        DW3["DeepWiki"]
+        S3["Sessions"]
+  end
+ subgraph MainOrg["Devin"]
+    direction TB
+        SubOrg1
+        SubOrg2
+        SubOrg3
+        GH1["GH Connection"]
+        GH2["GH Connection"]
+        GH3["GH Connection"]
+  end
+ subgraph Repos1["Repos"]
+  end
+ subgraph SubOrgA["CDO Org"]
+        App1["App"]
+        Repos1
+  end
+ subgraph Repos2["Repos"]
+  end
+ subgraph SubOrgB["CIO Org"]
+        App2["App"]
+        Repos2
+  end
+ subgraph Repos3["Repos"]
+  end
+ subgraph SubOrgC["COO Org"]
+        App3["App"]
+        Repos3
+  end
+ subgraph CloudOrg["GitHub Enterprise"]
+    direction TB
+        SubOrgA
+        SubOrgB
+        SubOrgC
+  end
+    App1 -- repos --> GH1
+    App2 -- repos --> GH2
+    App3 -- repos --> GH3
+    GH1 -- repository 
+  permissions --> DW1
+    GH2 -- repository
+  permissions --> DW2
+    GH3 -- repository
+  permissions --> DW3
+    DW1 -- index --> S1
+    DW2 -- index --> S2
+    DW3 -- index --> S3
+    Repos1 -- select repos --> App1
+    Repos2 -- select repos --> App2
+    Repos3 -- select repos --> App3
 ```
 
 ### Step 1: Set up GitHub Connections (Manual)
