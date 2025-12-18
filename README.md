@@ -96,7 +96,21 @@ Devin supports **JIT (Just-In-Time) Provisioning** with group-matching. When a u
 3. **JIT Provisioning Activates** - Users automatically get access when they sign in
 4. **Onboard Repositories** - Grant repo permissions to each organization
 
-### Step 1: Set up GitHub Connections (Manual)
+### Step 1: Create Organizations
+
+Use `create_organization.py` to create sub-organizations for each team or group that needs isolated access.
+
+### Step 2: Map IDP Groups to Organizations
+
+Use `assign_idp_group.py` to map your SSO/IDP groups to Devin organizations. Run `list_roles.py` first to see available role IDs.
+
+### Step 3: JIT Provisioning (Automatic)
+
+Once IDP groups are mapped, users automatically get access to their assigned organizations when they sign in via SSO. No additional action required.
+
+### Step 4: Onboard Repositories
+
+#### 4a. Set up GitHub Connections (Manual)
 
 Each [GitHub organization](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-organizations-in-your-enterprise/adding-organizations-to-your-enterprise#creating-a-new-organization) needs to be manually added as a [connection in Devin](https://docs.devin.ai/integrations/gh#setting-up-the-integration):
 
@@ -108,17 +122,17 @@ Each [GitHub organization](https://docs.github.com/en/enterprise-cloud@latest/ad
 
 **Note**: The Devin integration appears as a [GitHub App](https://docs.github.com/en/enterprise-cloud@latest/apps/github-marketplace/github-marketplace-overview/about-github-marketplace-for-apps#apps). Only GitHub Enterprise account administrators or org admins typically have the permissions required to modify GitHub App installations and update Devin's repository access.
 
-### Step 2: Provision Permissions via API (Automated)
+#### 4b. Grant Repository Permissions (Automated)
 
-Once GitHub connections are set up, use these scripts to programmatically manage repository permissions for your Devin [sub organizations](https://docs.devin.ai/enterprise/get-started#sub-organizations). This can also be done manually through Enterprise Settings.
+Use `set_repo_permissions.py` to grant repository access to specific Devin organizations. Run `list_connections.py` first to get connection IDs.
 
-### Step 3: Index Repositories (Automated)
+#### 4c. Index Repositories (Automated)
 
-After granting permissions, index the repositories to make them available as [Deep Wikis](https://docs.devin.ai/work-with-devin/deepwiki) for use in Devin sessions. Indexing allows Devin to understand and work with the repository codebase. This can also be done manually in the org settings page.
+Use `index_repositories.py` to index repositories and make them available as [Deep Wikis](https://docs.devin.ai/work-with-devin/deepwiki) for use in Devin sessions.
 
-### Step 4: Set Up Machine Snapshots (Manual) (Not a Hard Requirement to Run Sessions)
+#### 4d. Set Up Machine Snapshots (Optional)
 
-For repositories with specific build tools, dependencies, and environment configurations, you can set up machine snapshots through the Devin UI. This creates a pre-configured virtual machine environment that Devin uses as the starting point for each session. Configure through **Settings > Devin's Workspace** in the Devin app. See the [Repo Setup Guide](https://docs.devin.ai/onboard-devin/repo-setup) for details.
+For repositories with specific build tools, dependencies, and environment configurations, you can set up machine snapshots through the Devin UI. Configure through **Settings > Devin's Workspace** in the Devin app. See the [Repo Setup Guide](https://docs.devin.ai/onboard-devin/repo-setup) for details.
 
 ## Getting Started
 
