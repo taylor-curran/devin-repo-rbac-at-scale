@@ -7,19 +7,16 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ========== CONFIGURATION ==========
-# Your Devin API Key
-API_KEY = os.getenv("DEVIN_API_KEY", "YOUR_API_KEY_HERE")
-
-# Organization ID (get this from list_organizations.py)
-ORG_ID = "org-462b0fb046724b299a37f0830095aff7" 
+# Your Devin API Key (Service User credential with prefix: cog_)
+API_KEY = os.getenv("DEVIN_SERVICE_ACCOUNT_API_KEY", "YOUR_API_KEY_HERE")
 
 # ====================================
 
 def main():
-    """List all Git connections for an organization."""
+    """List all Git connections at the enterprise level."""
     
-    # API endpoint - connections are per organization
-    url = f"https://api.devin.ai/v2/enterprise/organizations/{ORG_ID}/git/connections"
+    # API endpoint (v3beta1) - connections are now enterprise-level, not org-scoped
+    url = "https://api.devin.ai/v3beta1/enterprise/git-providers/connections"
     
     # Request headers
     headers = {
@@ -37,18 +34,17 @@ def main():
         connections = data.get('items', [])
         
         # Display connections
-        print(f"\nGit Connections for Organization: {ORG_ID}")
+        print("\nEnterprise Git Connections:")
         print("=" * 60)
         
         if not connections:
-            print("No Git connections found for this organization.")
+            print("No Git connections found.")
             print("You may need to set up Git integrations in Devin Enterprise.")
         else:
             for conn in connections:
-                # v2 API uses different field names
-                conn_id = conn.get('id', conn.get('connection_id', 'No ID'))
+                conn_id = conn.get('git_connection_id', 'No ID')
                 conn_name = conn.get('name', 'Unnamed')
-                provider_type = conn.get('type', conn.get('provider', 'Unknown'))
+                provider_type = conn.get('git_provider_type', 'Unknown')
                 host = conn.get('host', 'No host')
                 
                 print(f"Name:       {conn_name}")
@@ -59,6 +55,10 @@ def main():
         
         print(f"\nTotal: {len(connections)} connections")
         
+        # Handle pagination if needed
+        if data.get('has_next_page'):
+            print(f"\nMore results available. Use cursor: {data.get('end_cursor')}")
+        
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
         if hasattr(e, 'response') and hasattr(e.response, 'text'):
@@ -66,7 +66,6 @@ def main():
         return 1
     
     return 0
-
 
 if __name__ == "__main__":
     exit(main())
