@@ -13,10 +13,10 @@ API_KEY = os.getenv("DEVIN_SERVICE_ACCOUNT_API_KEY", "YOUR_API_KEY_HERE")
 # ====================================
 
 def main():
-    """List all organizations in your Devin Enterprise account."""
+    """List all available roles in the enterprise."""
     
     # API endpoint (v3beta1)
-    url = "https://api.devin.ai/v3beta1/enterprise/organizations"
+    url = "https://api.devin.ai/v3beta1/enterprise/roles"
     
     # Request headers
     headers = {
@@ -30,24 +30,27 @@ def main():
         response.raise_for_status()
         data = response.json()
         
-        # Get organizations from response
-        organizations = data.get('items', [])
+        # Get roles from response
+        roles = data.get('items', [])
         
-        # Display organizations
-        print("\nOrganizations:")
-        print("-" * 40)
-        for org in organizations:
-            org_name = org.get('name', 'Unnamed')  # v3 uses 'name' not 'org_name'
-            org_id = org.get('org_id', 'No ID')
-            print(f"Name: {org_name}")
-            print(f"ID:   {org_id}")
-            print("-" * 40)
+        # Display roles
+        print("\nAvailable Roles:")
+        print("=" * 50)
         
-        print(f"\nTotal: {len(organizations)} organizations")
+        if not roles:
+            print("No roles found.")
+        else:
+            for role in roles:
+                role_id = role.get('role_id', 'Unknown')
+                role_name = role.get('role_name', 'Unknown')
+                role_type = role.get('role_type', 'Unknown')
+                
+                print(f"  {role_name}")
+                print(f"    ID:   {role_id}")
+                print(f"    Type: {role_type}")
+                print("-" * 50)
         
-        # Handle pagination if needed
-        if data.get('has_next_page'):
-            print(f"\nMore results available. Use cursor: {data.get('end_cursor')}")
+        print(f"\nTotal: {len(roles)} roles")
         
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")

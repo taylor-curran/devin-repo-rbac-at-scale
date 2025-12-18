@@ -7,26 +7,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # ========== CONFIGURATION ==========
-# Your Devin API Key
-API_KEY = os.getenv("DEVIN_API_KEY", "YOUR_API_KEY_HERE")
+# Your Devin API Key (Service User credential with prefix: cog_)
+API_KEY = os.getenv("DEVIN_SERVICE_ACCOUNT_API_KEY", "YOUR_API_KEY_HERE")
 
 # Organization ID (get this from list_organizations.py)
-ORG_ID = "org-406782bf7ec34819b0c3bd0ba67a5c84"  # org-2
+ORG_ID = "org-45ecc3f2730d46a5a7ebe433d0813678"  # taylor-demos
 
 # Git connection ID (get this from list_connections.py)
-CONNECTION_ID = "git-connection-54e8883977654c76ae4fc1746cb68fd6"  # taylorcurranpython on GitHub
+CONNECTION_ID = "git-connection-3ea0a2d0b7904885b8a5a42a10d77fd9"  # alexpeng-cognition
 
-# Repository to grant access to
-REPOSITORY_OWNER = "taylorcurranpython"
-REPOSITORY_NAME = "prefect"
+# Repository to grant access to (format: "owner/repo")
+REPOSITORY_PATH = "alexpeng-cognition/openvsx"
 
 # ====================================
 
 def main():
     """Add repository permissions to a Devin organization."""
     
-    # API endpoint
-    url = f"https://api.devin.ai/v2/enterprise/organizations/{ORG_ID}/git/permissions"
+    # API endpoint (v3beta1)
+    url = f"https://api.devin.ai/v3beta1/enterprise/organizations/{ORG_ID}/git-providers/permissions"
     
     # Request headers
     headers = {
@@ -34,13 +33,15 @@ def main():
         "Content-Type": "application/json"
     }
     
-    # Permission data - must be sent as an array
-    data = [{
-        "connection_id": CONNECTION_ID,
-        "repo_path": [REPOSITORY_OWNER, REPOSITORY_NAME]
-    }]
+    # Permission data - v3 uses 'permissions' array with 'repo_path' as string
+    data = {
+        "permissions": [{
+            "git_connection_id": CONNECTION_ID,
+            "repo_path": REPOSITORY_PATH
+        }]
+    }
     
-    print(f"\nAdding permissions for: {REPOSITORY_OWNER}/{REPOSITORY_NAME}")
+    print(f"\nAdding permissions for: {REPOSITORY_PATH}")
     print(f"Organization: {ORG_ID}")
     print(f"Connection: {CONNECTION_ID}")
     
@@ -60,7 +61,6 @@ def main():
         return 1
     
     return 0
-
 
 if __name__ == "__main__":
     exit(main())

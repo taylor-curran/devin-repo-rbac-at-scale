@@ -10,21 +10,20 @@ load_dotenv()
 # Your Devin API Key (Service User credential with prefix: cog_)
 API_KEY = os.getenv("DEVIN_SERVICE_ACCOUNT_API_KEY", "YOUR_API_KEY_HERE")
 
-# Organization ID (get this from list_organizations.py)
-ORG_ID = "org-406782bf7ec34819b0c3bd0ba67a5c84"  # org-2
+# New organization name
+ORG_NAME = "my-new-org"
 
-# Repositories to index (format: owner/repo)
-REPOSITORIES = [
-    "taylorcurranpython/prefect"
-]
+# Optional: ACU limits (set to None to use defaults)
+MAX_CYCLE_ACU_LIMIT = None    # Max ACUs per billing cycle
+MAX_SESSION_ACU_LIMIT = None  # Max ACUs per session
 
 # ====================================
 
 def main():
-    """Index repositories for use in Devin sessions."""
+    """Create a new organization in Devin Enterprise."""
     
-    # API endpoint
-    url = "https://api.devin.ai/beta/v2/enterprise/repositories/bulk-index"
+    # API endpoint (v3beta1)
+    url = "https://api.devin.ai/v3beta1/enterprise/organizations"
     
     # Request headers
     headers = {
@@ -32,16 +31,18 @@ def main():
         "Content-Type": "application/json"
     }
     
-    # Request data
+    # Request body
     data = {
-        "org_id": ORG_ID,
-        "repo_names": REPOSITORIES
+        "name": ORG_NAME
     }
     
-    print(f"\nIndexing repositories for organization: {ORG_ID}")
-    print("Repositories to index:")
-    for repo in REPOSITORIES:
-        print(f"  - {repo}")
+    # Add optional limits if specified
+    if MAX_CYCLE_ACU_LIMIT is not None:
+        data["max_cycle_acu_limit"] = MAX_CYCLE_ACU_LIMIT
+    if MAX_SESSION_ACU_LIMIT is not None:
+        data["max_session_acu_limit"] = MAX_SESSION_ACU_LIMIT
+    
+    print(f"\nCreating organization: {ORG_NAME}")
     
     try:
         # Make the API request
@@ -49,9 +50,11 @@ def main():
         response.raise_for_status()
         result = response.json()
         
-        print("\n✓ Indexing started successfully!")
-        print(f"Response: {json.dumps(result, indent=2)}")
-        print("\nNote: Indexing is asynchronous. Use the repository status endpoint to check progress.")
+        print("\n✓ Organization created!")
+        print(f"  Name:   {result.get('name')}")
+        print(f"  Org ID: {result.get('org_id')}")
+        print(f"\nFull response:")
+        print(json.dumps(result, indent=2))
         
     except requests.exceptions.RequestException as e:
         print(f"\nError: {e}")
@@ -60,7 +63,6 @@ def main():
         return 1
     
     return 0
-
 
 if __name__ == "__main__":
     exit(main())
