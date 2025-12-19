@@ -10,7 +10,7 @@ flowchart TB
         V2_Details["v2 Session Details<br/><code>apk_user_*</code> token"]
     end
 
-    subgraph Scripts["📜 WF Audit Scripts"]
+    subgraph Scripts["📜 Audit Scripts"]
         direction TB
         
         subgraph AlwaysOn["Always-On Collectors"]
@@ -28,7 +28,7 @@ flowchart TB
         end
     end
 
-    subgraph SIEM["🔒 Wells Fargo Security"]
+    subgraph SIEM["🔒 Enterprise Security"]
         Splunk["Splunk HEC"]
         Dashboards["Dashboards<br/>Usage & Compliance"]
         Alerts["Alert Rules<br/>Guardrail Violations"]
@@ -166,7 +166,7 @@ volume_estimator.py ──┬──► Sample audit logs (N hours)
 
 ## Why This Design?
 
-1. **Proxy bypass**: Devin doesn't route through WF proxy → need API-based logging
+1. **Proxy bypass**: Devin doesn't route through enterprise proxy → need API-based logging
 2. **Cost control**: Full session data is large; only pull when needed
 3. **SOC workflow**: Continuous alerting + on-demand investigation matches existing patterns
 4. **Separation of duties**: Scripts collect, Splunk detects, SOC investigates

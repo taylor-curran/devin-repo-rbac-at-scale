@@ -68,7 +68,7 @@ flowchart TB
         V2_Details["v2 Session Details<br/>apk_user_* token"]
     end
 
-    subgraph Scripts["📜 WF Audit Scripts"]
+    subgraph Scripts["📜 Audit Scripts"]
         subgraph AlwaysOn["Always-On Collectors"]
             ALP["audit_log_poller.py<br/>• login, session lifecycle<br/>• ai_guardrail_violation"]
             SIP["session_insights_poller.py<br/>• ACUs, PRs, status"]
@@ -82,7 +82,7 @@ flowchart TB
         HEC["splunk_hec_sender.py"]
     end
 
-    subgraph SIEM["🔒 Wells Fargo Security"]
+    subgraph SIEM["🔒 Enterprise Security"]
         Splunk["Splunk HEC"]
         Alerts["Alert Rules"]
         SOC["SOC Analysts"]
