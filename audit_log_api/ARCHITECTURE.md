@@ -5,9 +5,8 @@
 ```mermaid
 flowchart TB
     subgraph Devin["☁️ Devin Platform APIs"]
-        V3["v3beta1 Audit Logs<br/><code>cog_*</code> token"]
-        V2_Insights["v2 Session Insights<br/><code>apk_user_*</code> token"]
-        V2_Details["v2 Session Details<br/><code>apk_user_*</code> token"]
+        AuditAPI["Audit Logs API"]
+        SessionsAPI["Sessions API"]
     end
 
     subgraph Scripts["📜 Audit Scripts"]
@@ -37,8 +36,8 @@ flowchart TB
     end
 
     %% Data flows
-    V3 -->|"poll every 5-10s"| ALP
-    V2_Insights -->|"poll every 60s"| SIP
+    AuditAPI -->|"poll every 5-10s"| ALP
+    SessionsAPI -->|"poll every 60s"| SIP
     
     ALP --> HEC
     SIP --> HEC
@@ -48,14 +47,14 @@ flowchart TB
     Splunk --> Alerts
     Alerts -->|"🚨 violation detected"| SOC
     
-    SOC -->|"investigate session_id"| IDD
-    IDD -->|"fetch full context"| V2_Details
-    IDD -->|"fetch related logs"| V3
+    SOC -->|alert or inquiry<br/>session_id / user / time| IDD
+    IDD -->|fetch scoped sessions| SessionsAPI
+    IDD -->|fetch related audit slice| AuditAPI
     IDD --> Reports
     Reports --> SOC
     
-    VOL -.->|"sample"| V3
-    VOL -.->|"sample"| V2_Insights
+    VOL -.->|"sample"| AuditAPI
+    VOL -.->|"sample"| SessionsAPI
     
     %% Styling
     classDef always fill:#e1f5fe,stroke:#01579b

@@ -63,9 +63,8 @@ SPLUNK_INDEX=devin_logs
 ```mermaid
 flowchart TB
     subgraph Devin["☁️ Devin Platform APIs"]
-        V3["v3beta1 Audit Logs<br/>cog_* token"]
-        V2_Insights["v2 Session Insights<br/>apk_user_* token"]
-        V2_Details["v2 Session Details<br/>apk_user_* token"]
+        AuditAPI["Audit Logs API"]
+        SessionsAPI["Sessions API"]
     end
 
     subgraph Scripts["📜 Audit Scripts"]
@@ -89,11 +88,11 @@ flowchart TB
         Reports["Investigation Reports"]
     end
 
-    V3 -->|"poll 5-10s"| ALP
-    V2_Insights -->|"poll 60s"| SIP
+    AuditAPI -->|"poll 5-10s"| ALP
+    SessionsAPI -->|"poll 60s"| SIP
     ALP & SIP --> HEC --> Splunk --> Alerts -->|"🚨 violation"| SOC
     SOC -->|"investigate"| IDD
-    IDD --> V2_Details & V3
+    IDD --> SessionsAPI & AuditAPI
     IDD --> Reports --> SOC
 ```
 
