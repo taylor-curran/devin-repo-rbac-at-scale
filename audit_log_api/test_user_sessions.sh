@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# test_user_sessions.sh - Track who logged in and what sessions they ran
+# test_user_sessions.sh - Track who logged in and what sessions they ran by org
 #
 # Uses:
-#   - v3 API for audit logs (login events) - requires service account key
-#   - v2 API for sessions (includes user_id) - requires admin user key
+#   - v3 API for audit logs (login events) and organizations - requires service account key
+#   - v2 API for sessions (includes user_id, org_id) - requires admin user key
 #
 # Required:
-#   - DEVIN_SERVICE_ACCOUNT_API_KEY (cog_*) - for v3 audit logs
+#   - DEVIN_SERVICE_ACCOUNT_API_KEY (cog_*) - for v3 audit logs & orgs
 #   - DEVIN_ADMIN_USER_API_KEY (apk_user_*) - for v2 sessions
 #   - jq (for JSON parsing)
 #
@@ -39,19 +39,34 @@ fi
 API_V3="https://api.devin.ai/v3beta1"
 API_V2="https://api.devin.ai/v2"
 
+# Configuration
+N_ORGS=${N_ORGS:-4}  # Number of orgs to display (default: 4)
+
 # Time window: last 2 days
 TIME_BEFORE=$(date +%s)
 TIME_AFTER=$((TIME_BEFORE - 2*24*60*60))
 
 echo "========================================================================"
-echo "User Login & Session Tracker (Shell Version)"
+echo "User Login & Session Tracker by Organization (Top ${N_ORGS})"
 echo "========================================================================"
 echo ""
 echo "Time window: $(date -r $TIME_AFTER) → $(date -r $TIME_BEFORE)"
+echo "Showing top ${N_ORGS} organizations by session count"
+
+# ========== FETCH ORGANIZATIONS (v3 API) ==========
+echo ""
+echo "[1/3] Fetching organizations from v3 API..."
+
+ORGS=$(curl -s --request GET \
+    --url "${API_V3}/enterprise/organizations?first=200" \
+    --header "Authorization: Bearer ${DEVIN_SERVICE_ACCOUNT_API_KEY}")
+
+ORG_COUNT=$(echo "$ORGS" | jq '.items | length')
+echo "      Found ${ORG_COUNT} organizations"
 
 # ========== FETCH LOGIN EVENTS (v3 API) ==========
 echo ""
-echo "[1/2] Fetching login events from v3 audit logs..."
+echo "[2/3] Fetching login events from v3 audit logs..."
 
 LOGINS=$(curl -s --request GET \
     --url "${API_V3}/enterprise/audit-logs?action=login&time_after=${TIME_AFTER}&time_before=${TIME_BEFORE}&first=200" \
@@ -62,7 +77,7 @@ echo "      Found ${LOGIN_COUNT} login events"
 
 # ========== FETCH SESSIONS (v2 API) ==========
 echo ""
-echo "[2/2] Fetching sessions from v2 enterprise API..."
+echo "[3/3] Fetching sessions from v2 enterprise API..."
 
 SESSIONS=$(curl -s --request GET \
     --url "${API_V2}/enterprise/sessions?limit=200" \
@@ -71,46 +86,55 @@ SESSIONS=$(curl -s --request GET \
 SESSION_COUNT=$(echo "$SESSIONS" | jq '.items | length')
 echo "      Found ${SESSION_COUNT} sessions"
 
-# ========== DISPLAY RESULTS ==========
-echo ""
-echo "Correlating logins to sessions..."
-echo ""
-echo "========================================================================"
-echo "LOGIN EVENTS"
-echo "========================================================================"
-
-echo "$LOGINS" | jq -r '.items[] | "[\(.created_at | todate)] \(.user_email // "N/A") (user_id: \(.user_id // "N/A"))"' | head -20
+# Build org_id -> org_name lookup
+ORG_LOOKUP=$(echo "$ORGS" | jq -r '.items | map({(.org_id): .name}) | add')
 
 echo ""
 echo "========================================================================"
-echo "SESSIONS BY USER"
+echo "LOGIN EVENTS (last 20)"
 echo "========================================================================"
 
-# Get unique user_ids and their sessions
-echo "$SESSIONS" | jq -r '
+echo "$LOGINS" | jq -r '.items[:20][] | "[\(.created_at | todate)] \(.user_email // "N/A") (user_id: \(.user_id // "N/A"))"'
+
+echo ""
+echo "========================================================================"
+echo "SESSIONS BY ORGANIZATION → USER"
+echo "========================================================================"
+
+# Group sessions by org_id, then by user_id within each org (limit to N_ORGS)
+echo "$SESSIONS" | jq -r --argjson orgs "$ORG_LOOKUP" --argjson n "$N_ORGS" '
     .items 
-    | group_by(.user_id) 
-    | .[] 
-    | "
-👤 User ID: \(.[0].user_id // "unknown")
-   Sessions: \(length)
-\(.[0:5] | .[] | "   - [\(.status)] \(.title // "N/A" | .[0:50])
-     Created: \(.created_at) | ACUs: \(.acus_consumed // 0)")"
+    | group_by(.org_id) 
+    | sort_by(-length)
+    | .[:$n]
+    | .[]
+    | . as $org_sessions
+    | ($orgs[.[0].org_id] // .[0].org_id) as $org_name
+    | "\n================================================================================\n🏢 Organization: \($org_name)\n   Org ID: \(.[0].org_id)\n   Total Sessions: \(length)\n================================================================================",
+    (
+        $org_sessions 
+        | group_by(.user_id) 
+        | sort_by(-length)
+        | .[] 
+        | "\n  👤 User ID: \(.[0].user_id)\n     Sessions: \(length)",
+        (.[0:3][] | "     - [\(.status)] \((.title // "N/A")[0:45])\n       Created: \(.created_at) | ACUs: \(.acus_consumed // 0)")
+    )
 '
 
 echo ""
 echo "========================================================================"
-echo "SUMMARY: Users who logged in and their session counts"
+echo "SUMMARY BY ORGANIZATION (Top ${N_ORGS})"
 echo "========================================================================"
 
-# Create a summary combining logins and sessions
-echo ""
-echo "Recent logins:"
-echo "$LOGINS" | jq -r '.items | group_by(.user_email) | .[] | "\(.[-1].user_email): \(length) login(s), user_id=\(.[-1].user_id)"'
-
-echo ""
-echo "Sessions per user_id:"
-echo "$SESSIONS" | jq -r '.items | group_by(.user_id) | .[] | "user_id=\(.[0].user_id): \(length) session(s)"'
+echo "$SESSIONS" | jq -r --argjson orgs "$ORG_LOOKUP" --argjson n "$N_ORGS" '
+    .items 
+    | group_by(.org_id) 
+    | sort_by(-length)
+    | .[:$n]
+    | .[] 
+    | ($orgs[.[0].org_id] // .[0].org_id) as $org_name
+    | "\($org_name): \(length) session(s), \(group_by(.user_id) | length) user(s)"
+'
 
 echo ""
 echo "========================================================================"
