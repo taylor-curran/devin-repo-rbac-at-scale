@@ -1,0 +1,1477 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Devin API v1",
+    "description": "Devin API v1 - Org-scoped session management, attachments, knowledge, playbooks, and secrets.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Cognition Labs",
+      "url": "https://docs.devin.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.devin.ai",
+      "description": "Production API Server"
+    }
+  ],
+  "paths": {
+    "/v1/attachments": {
+      "post": {
+        "summary": "Upload an attachment",
+        "description": "Upload a file attachment that can be used in Devin sessions. Returns the URL of the uploaded attachment as a string.",
+        "operationId": "upload_attachment_customer_endpoint_v1_attachments_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_attachment_customer_endpoint_v1_attachments_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/knowledge": {
+      "get": {
+        "summary": "List all knowledge",
+        "description": "List all knowledge entries and folders for the organization.",
+        "operationId": "get_all_knowledge_v1_knowledge_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllKnowledgeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create knowledge entry",
+        "description": "Create a new knowledge entry for the organization.",
+        "operationId": "create_knowledge_v1_knowledge_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKnowledgeParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/knowledge/{note_id}": {
+      "put": {
+        "summary": "Update knowledge entry",
+        "description": "Update an existing knowledge entry.",
+        "operationId": "update_knowledge_v1_knowledge__note_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "note_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKnowledgeParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete knowledge entry",
+        "description": "Delete a knowledge entry from the organization.",
+        "operationId": "delete_knowledge_v1_knowledge__note_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "note_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/playbooks": {
+      "get": {
+        "summary": "List playbooks",
+        "description": "List all team playbooks for the organization.",
+        "operationId": "get_playbooks_v1_playbooks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlaybookResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create playbook",
+        "description": "Create a new team playbook for the organization.",
+        "operationId": "create_playbook_v1_playbooks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaybookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/playbooks/{playbook_id}": {
+      "get": {
+        "summary": "Get playbook",
+        "description": "Get a specific team playbook by ID.",
+        "operationId": "get_playbook_v1_playbooks__playbook_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update playbook",
+        "description": "Update an existing team playbook.",
+        "operationId": "update_playbook_v1_playbooks__playbook_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlaybookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete playbook",
+        "description": "Delete a team playbook from the organization.",
+        "operationId": "delete_playbook_v1_playbooks__playbook_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/secrets": {
+      "get": {
+        "summary": "List secrets",
+        "description": "List all secrets for the organization. Returns metadata only, not the secret values.",
+        "operationId": "get_secrets_v1_secrets_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SecretMetadata"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v1/secrets/{secret_id}": {
+      "delete": {
+        "summary": "Delete a secret",
+        "description": "Delete a secret from the organization.",
+        "operationId": "delete_secret_v1_secrets__secret_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "secret_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteSecretResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/sessions": {
+      "get": {
+        "summary": "List sessions",
+        "description": "List all Devin sessions for your organization. Supports pagination and filtering by tags and user email.",
+        "operationId": "list_sessions_endpoint_v1_sessions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Skip"
+            }
+          },
+          {
+            "description": "List of tags to filter sessions by.",
+            "in": "query",
+            "name": "tags",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "description": "List of tags to filter sessions by.",
+              "title": "Tags"
+            }
+          },
+          {
+            "description": "Filter sessions by the creator's email address.",
+            "in": "query",
+            "name": "user_email",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "description": "Filter sessions by the creator's email address.",
+              "title": "User Email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSessionsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new session",
+        "description": "Create a new Devin session with the specified prompt and configuration options.",
+        "operationId": "create_session_endpoint_v1_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session_id}": {
+      "get": {
+        "summary": "Retrieve details about an existing session",
+        "description": "Retrieve detailed information about an existing Devin session, including its status, output, and metadata.",
+        "operationId": "get_session_endpoint_v1_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Terminate a session",
+        "description": "Terminate an active Devin session. The session must not already be in an exited state.",
+        "operationId": "terminate_session_endpoint_v1_sessions__session_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminateSessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session_id}/message": {
+      "post": {
+        "summary": "Send a message to a session",
+        "description": "Send a message to an active Devin session. The session must be in a running state to receive messages. Returns null on success, or a detail message if the session is already suspended.",
+        "operationId": "post_message_to_session_v1_sessions__session_id__message_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostMessageParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageSentResponse",
+                  "nullable": true,
+                  "title": "Response Post Message To Session V1 Sessions  Session Id  Message Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v1/sessions/{session_id}/tags": {
+      "put": {
+        "summary": "Update session tags",
+        "description": "Update the tags associated with a Devin session.",
+        "operationId": "edit_session_tags_v1_sessions__session_id__tags_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditSessionTagsParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditTagsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SessionSecretInput": {
+        "description": "Input model for a session secret provided via API.",
+        "properties": {
+          "key": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "sensitive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "value": {
+            "maxLength": 65536,
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "GetSessionResponse": {
+        "description": "Detailed information about an existing session.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "messages": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SessionMessage"
+            },
+            "type": "array"
+          },
+          "playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pull_request": {
+            "$ref": "#/components/schemas/PullRequestInfo",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_enum": {
+            "enum": [
+              "working",
+              "blocked",
+              "expired",
+              "finished",
+              "suspend_requested",
+              "suspend_requested_frontend",
+              "resume_requested",
+              "resume_requested_frontend",
+              "resumed"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "structured_output": {
+            "nullable": true,
+            "title": "Structured Output"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "type": "object"
+      },
+      "KnowledgeCreatedBy": {
+        "description": "Information about who created a knowledge entry.",
+        "properties": {
+          "full_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "full_name"
+        ],
+        "type": "object"
+      },
+      "PlaybookResponse": {
+        "properties": {
+          "access_type": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "playbook_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "playbook_id",
+          "title",
+          "body",
+          "status",
+          "access_type",
+          "org_id",
+          "created_at",
+          "updated_at",
+          "created_by_user_id",
+          "created_by_user_name",
+          "updated_by_user_id",
+          "updated_by_user_name"
+        ],
+        "type": "object"
+      },
+      "Body_upload_attachment_customer_endpoint_v1_attachments_post": {
+        "properties": {
+          "file": {
+            "format": "binary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "SessionSummary": {
+        "description": "Summary information about a session for list responses.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pull_request": {
+            "$ref": "#/components/schemas/PullRequestInfo",
+            "nullable": true
+          },
+          "requesting_user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_enum": {
+            "enum": [
+              "working",
+              "blocked",
+              "expired",
+              "finished",
+              "suspend_requested",
+              "suspend_requested_frontend",
+              "resume_requested",
+              "resume_requested_frontend",
+              "resumed"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "structured_output": {
+            "nullable": true,
+            "title": "Structured Output"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "type": "object"
+      },
+      "EditSessionTagsParams": {
+        "properties": {
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "tags"
+        ],
+        "type": "object"
+      },
+      "CreateSessionResponse": {
+        "description": "Response body returned when a session is successfully created.",
+        "properties": {
+          "is_new_session": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "url"
+        ],
+        "type": "object"
+      },
+      "CreateKnowledgeParams": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent_folder_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned_repo": {
+            "type": "string",
+            "nullable": true
+          },
+          "trigger_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "body",
+          "trigger_description"
+        ],
+        "type": "object"
+      },
+      "DeleteSecretResponse": {
+        "description": "Response for successful secret deletion.",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "PostMessageParams": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "MessageSentResponse": {
+        "description": "Response when a message is sent to a session that is already in a specific state.",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "type": "object"
+      },
+      "PullRequestInfo": {
+        "description": "Pull request information associated with a session.",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "AllKnowledgeResponse": {
+        "properties": {
+          "folders": {
+            "items": {
+              "$ref": "#/components/schemas/FolderResponse"
+            },
+            "type": "array"
+          },
+          "knowledge": {
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeResponse"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "knowledge",
+          "folders"
+        ],
+        "type": "object"
+      },
+      "TerminateSessionResponse": {
+        "description": "Response for successful session termination.",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "type": "object"
+      },
+      "UpdatePlaybookResponse": {
+        "description": "Response for successful playbook update.",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "EditTagsResponse": {
+        "description": "Response for successful tag update.",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "type": "object"
+      },
+      "KnowledgeResponse": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/KnowledgeCreatedBy",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent_folder_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned_repo": {
+            "type": "string",
+            "nullable": true
+          },
+          "trigger_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "body",
+          "trigger_description",
+          "id",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "CreatePlaybookRequest": {
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "FolderResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "SecretMetadata": {
+        "description": "Metadata about a stored secret.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "cookie",
+              "key-value",
+              "dictionary",
+              "totp"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object"
+      },
+      "CreateSessionParams": {
+        "properties": {
+          "idempotent": {
+            "default": false,
+            "type": "boolean"
+          },
+          "knowledge_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "List of knowledge IDs to use. If None, use all knowledge. If empty list, use no knowledge."
+          },
+          "max_acu_limit": {
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "type": "integer",
+            "nullable": true,
+            "description": "Maximum ACU limit, must be positive"
+          },
+          "playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "secret_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "List of secret IDs to use. If None, use all secrets. If empty list, use no secrets."
+          },
+          "session_secrets": {
+            "items": {
+              "$ref": "#/components/schemas/SessionSecretInput"
+            },
+            "type": "array",
+            "description": "List of session-specific secrets to use. These secrets are only available in this session and are not stored in organization secrets."
+          },
+          "snapshot_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "description": "List of tags to add to the session."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Custom title for the session. If None, a title will be generated automatically."
+          },
+          "unlisted": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object"
+      },
+      "SessionMessage": {
+        "description": "A message in a Devin session.",
+        "properties": {
+          "event_id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "type",
+          "event_id",
+          "message",
+          "timestamp"
+        ],
+        "type": "object"
+      },
+      "DeletePlaybookResponse": {
+        "description": "Response for successful playbook deletion.",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "ListSessionsResponse": {
+        "description": "Response containing a list of sessions.",
+        "properties": {
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/SessionSummary"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "sessions"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API Key authentication. Use Personal API Key (apk_user_*) or Service API Key (apk_*) for v1/v2. Use Service User credential (cog_*) for v3."
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

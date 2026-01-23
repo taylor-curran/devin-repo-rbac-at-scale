@@ -43,6 +43,7 @@ env/
 
 # Output files
 *.json
+!api-specs/*.json
 *.log
 organizations_*.json
 org_config.json

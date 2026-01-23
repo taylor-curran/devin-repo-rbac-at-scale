@@ -1,0 +1,3083 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Devin API v2",
+    "description": "Devin API v2 - Enterprise admin APIs for organization management, members, API keys, audit logs, consumption metrics, and sessions.",
+    "version": "2.0.0",
+    "contact": {
+      "name": "Cognition Labs",
+      "url": "https://docs.devin.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.devin.ai",
+      "description": "Production API Server"
+    }
+  ],
+  "paths": {
+    "/v2/enterprise/api-keys": {
+      "post": {
+        "tags": [
+          "api-keys"
+        ],
+        "summary": "Provision Service Api Key Endpoint",
+        "description": "Provision a service API key for an organization in the enterprise.",
+        "operationId": "provision_service_api_key_endpoint_v2_enterprise_api_keys_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceKeyResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "api-keys"
+        ],
+        "summary": "Get Enterprise Api Keys Endpoint",
+        "description": "Get API keys across organizations in the enterprise with pagination and optional org filter.",
+        "operationId": "get_enterprise_api_keys_endpoint_v2_enterprise_api_keys_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "required": false,
+            "schema": {
+              "default": 25,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_id",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Org Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_ApiKeyResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "api-keys"
+        ],
+        "summary": "Revoke Enterprise Api Keys Endpoint",
+        "description": "Revoke all API keys in the enterprise.",
+        "operationId": "revoke_enterprise_api_keys_endpoint_v2_enterprise_api_keys_delete",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/api-keys/{api_key_id}": {
+      "delete": {
+        "tags": [
+          "api-keys"
+        ],
+        "summary": "Revoke Enterprise Api Key Endpoint",
+        "description": "Revoke a specific API key in the enterprise.",
+        "operationId": "revoke_enterprise_api_key_endpoint_v2_enterprise_api_keys__api_key_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "api_key_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/audit-logs": {
+      "get": {
+        "tags": [
+          "audit-logs",
+          "audit-logs"
+        ],
+        "summary": "Get Audit Logs",
+        "description": "Get audit logs for the current user's organization. Only accessible by enterprise admins.",
+        "operationId": "get_audit_logs_v2_enterprise_audit_logs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/consumption/cycles": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Consumption Cycles Endpoint",
+        "description": "Generate a list of all the billing cycles for the enterprise until today.",
+        "operationId": "consumption_cycles_endpoint_v2_enterprise_consumption_cycles_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BillingCycle"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/consumption/daily": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Daily Consumption Endpoint",
+        "description": "Return daily consumption for the current billing cycle.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass timestamps with this timezone offset\n(e.g., `2025-12-05T08:00:00Z` for December 5, 2025 PST).",
+        "operationId": "daily_consumption_endpoint_v2_enterprise_consumption_daily_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/consumption/daily/{user_id}": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "User Daily Consumption Endpoint",
+        "description": "Return daily consumption for a specific user. Defaults to current billing cycle.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass timestamps with this timezone offset\n(e.g., `2025-12-05T08:00:00Z` for December 5, 2025 PST).",
+        "operationId": "user_daily_consumption_endpoint_v2_enterprise_consumption_daily__user_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/groups": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Enterprise Groups Endpoint",
+        "operationId": "enterprise_groups_endpoint_v2_enterprise_groups_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_EnterpriseGroupResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Enterprise Group Create Endpoint",
+        "description": "Create groups in the enterprise",
+        "operationId": "enterprise_group_create_endpoint_v2_enterprise_groups_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseIdpGroupsCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/groups/{group_name}": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "Enterprise Group Details Endpoint",
+        "operationId": "enterprise_group_details_endpoint_v2_enterprise_groups__group_name__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "group_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseGroupResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/members": {
+      "get": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Enterprise Members Endpoint",
+        "description": "List paginated members in this enterprise",
+        "operationId": "enterprise_members_endpoint_v2_enterprise_members_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Email"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_EnterpriseUserResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/members/invite": {
+      "post": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Enterprise Members Invite Endpoint",
+        "description": "Invite multiple users to the enterprise by email (bulk invite, max 100 users)",
+        "operationId": "enterprise_members_invite_endpoint_v2_enterprise_members_invite_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseMemberInviteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseMemberInviteResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/members/roles": {
+      "patch": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Enterprise Members Role Update Endpoint",
+        "description": "Update account roles for users available to the user's enterprise.\nTakes a list of user_ids and a role_id.",
+        "operationId": "enterprise_members_role_update_endpoint_v2_enterprise_members_roles_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/members/{user_id}": {
+      "get": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Enterprise Member Details Endpoint",
+        "description": "Get details for a specific member in this enterprise",
+        "operationId": "enterprise_member_details_endpoint_v2_enterprise_members__user_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterpriseUserResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "members"
+        ],
+        "summary": "Enterprise Members Removal Endpoint",
+        "description": "Remove a user from an organization",
+        "operationId": "enterprise_members_removal_endpoint_v2_enterprise_members__user_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/metrics/prs": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "Enterprise Pr Metrics Endpoint",
+        "operationId": "enterprise_pr_metrics_endpoint_v2_enterprise_metrics_prs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrMetrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/metrics/searches": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "Enterprise Searches Metrics Endpoint",
+        "operationId": "enterprise_searches_metrics_endpoint_v2_enterprise_metrics_searches_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchesMetrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/metrics/sessions": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "Enterprise Sessions Metrics Endpoint",
+        "operationId": "enterprise_sessions_metrics_endpoint_v2_enterprise_metrics_sessions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionsMetrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/metrics/usage": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "Enterprise Usage Metrics Endpoint",
+        "operationId": "enterprise_usage_metrics_endpoint_v2_enterprise_metrics_usage_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End Date"
+            }
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageMetrics"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/organizations": {
+      "get": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Enterprise Organizations Endpoint",
+        "description": "List paginated organizations in this enterprise",
+        "operationId": "enterprise_organizations_endpoint_v2_enterprise_organizations_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_OrganizationResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Create Enterprise Organization Endpoint",
+        "description": "Create a new organization in this enterprise",
+        "operationId": "create_enterprise_organization_endpoint_v2_enterprise_organizations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseOrgCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/organizations/{org_id}": {
+      "get": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Enterprise Organization Details Endpoint",
+        "description": "Get details for a specific organization in this enterprise",
+        "operationId": "enterprise_organization_details_endpoint_v2_enterprise_organizations__org_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Update Organization Endpoint",
+        "description": "Update an organization's ACU limit and/or display name",
+        "operationId": "update_organization_endpoint_v2_enterprise_organizations__org_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Delete Enterprise Organization Endpoint",
+        "description": "Delete an organization from this enterprise",
+        "operationId": "delete_enterprise_organization_endpoint_v2_enterprise_organizations__org_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/playbooks": {
+      "get": {
+        "tags": [
+          "playbooks"
+        ],
+        "summary": "Get Enterprise Playbooks",
+        "description": "Get all enterprise playbooks.",
+        "operationId": "get_enterprise_playbooks_v2_enterprise_playbooks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/EnterprisePlaybookResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "playbooks"
+        ],
+        "summary": "Create Enterprise Playbook",
+        "description": "Create a new enterprise playbook.",
+        "operationId": "create_enterprise_playbook_v2_enterprise_playbooks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEnterprisePlaybookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/playbooks/{playbook_id}": {
+      "get": {
+        "tags": [
+          "playbooks"
+        ],
+        "summary": "Get Enterprise Playbook",
+        "description": "Get a specific enterprise playbook by ID.",
+        "operationId": "get_enterprise_playbook_v2_enterprise_playbooks__playbook_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnterprisePlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "playbooks"
+        ],
+        "summary": "Update Enterprise Playbook",
+        "description": "Update an existing enterprise playbook.",
+        "operationId": "update_enterprise_playbook_v2_enterprise_playbooks__playbook_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEnterprisePlaybookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/roles": {
+      "get": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "Enterprise Roles Endpoint",
+        "description": "List all roles that are available to the user's enterprise.\nFor each role, include the role_id, role_name, and role_type.",
+        "operationId": "enterprise_roles_endpoint_v2_enterprise_roles_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RoleResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/sessions": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "List Sessions",
+        "operationId": "list_sessions_v2_enterprise_sessions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_date_from",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Created Date From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_date_to",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Created Date To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_date_from",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Updated Date From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_date_to",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Updated Date To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "session_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Session Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_SessionResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/sessions/insights": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "List Sessions Detail",
+        "description": "List sessions with detailed information for enterprise.",
+        "operationId": "list_sessions_detail_v2_enterprise_sessions_insights_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_date_from",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Created Date From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_date_to",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Created Date To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_date_from",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Updated Date From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_date_to",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string",
+              "nullable": true,
+              "title": "Updated Date To"
+            }
+          },
+          {
+            "in": "query",
+            "name": "org_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Org Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "user_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "User Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "session_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Session Ids"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_SessionDetailResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v2/enterprise/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Get Session Detail",
+        "description": "Get a single session by ID with detailed info.",
+        "operationId": "get_session_detail_v2_enterprise_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionDetailResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SessionAnalysisTimelineEvent": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisData": {
+        "properties": {
+          "action_items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SessionAnalysisActionItem"
+            },
+            "type": "array"
+          },
+          "issues": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SessionAnalysisIssue"
+            },
+            "type": "array"
+          },
+          "suggested_prompt": {
+            "$ref": "#/components/schemas/SessionAnalysisSuggestedPrompt",
+            "nullable": true
+          },
+          "timeline": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/SessionAnalysisTimelineEvent"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "suggested_prompt"
+        ],
+        "type": "object"
+      },
+      "EnterpriseMemberInviteRequest": {
+        "properties": {
+          "emails": {
+            "description": "List of email addresses to invite (max 100)",
+            "items": {
+              "format": "email",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "type": "array"
+          }
+        },
+        "required": [
+          "emails"
+        ],
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "EnterpriseMemberInviteResponse": {
+        "properties": {
+          "invited_count": {
+            "type": "integer"
+          },
+          "invitee_user_id_to_email": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "status": {
+            "default": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "invited_count",
+          "invitee_user_id_to_email"
+        ],
+        "type": "object"
+      },
+      "SessionsMetrics": {
+        "properties": {
+          "sessions_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sessions_count"
+        ],
+        "type": "object"
+      },
+      "CreateEnterprisePlaybookRequest": {
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "UsageMetrics": {
+        "properties": {
+          "prs_closed": {
+            "type": "integer"
+          },
+          "prs_merged": {
+            "type": "integer"
+          },
+          "prs_opened": {
+            "type": "integer"
+          },
+          "searches_count": {
+            "type": "integer"
+          },
+          "sessions_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sessions_count",
+          "searches_count",
+          "prs_opened",
+          "prs_closed",
+          "prs_merged"
+        ],
+        "type": "object"
+      },
+      "AuditLogsResponse": {
+        "description": "Response containing audit logs.",
+        "properties": {
+          "audit_logs": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogEntry"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "audit_logs"
+        ],
+        "type": "object"
+      },
+      "PrMetrics": {
+        "properties": {
+          "prs_closed": {
+            "type": "integer"
+          },
+          "prs_merged": {
+            "type": "integer"
+          },
+          "prs_opened": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prs_opened",
+          "prs_closed",
+          "prs_merged"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_OrganizationResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "EnterpriseGroupResponse": {
+        "properties": {
+          "group_name": {
+            "type": "string"
+          },
+          "org_count": {
+            "type": "integer"
+          },
+          "role_by_org_id": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "group_name",
+          "org_count",
+          "role_by_org_id"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisActionItem": {
+        "properties": {
+          "action_item": {
+            "type": "string"
+          },
+          "issue_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue_id",
+          "type",
+          "action_item"
+        ],
+        "type": "object"
+      },
+      "ServiceKeyResponse": {
+        "properties": {
+          "api_key": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "SearchesMetrics": {
+        "properties": {
+          "searches_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "searches_count"
+        ],
+        "type": "object"
+      },
+      "EnterpriseIdpGroupsCreate": {
+        "properties": {
+          "group_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "group_names"
+        ],
+        "type": "object"
+      },
+      "SessionDetailResponse": {
+        "properties": {
+          "acus_consumed": {
+            "type": "number"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "initial_user_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "pull_requests": {
+            "items": {
+              "$ref": "#/components/schemas/SessionPullRequest"
+            },
+            "type": "array"
+          },
+          "session_analysis": {
+            "$ref": "#/components/schemas/SessionAnalysisData",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "new",
+              "claimed",
+              "running",
+              "exit",
+              "error",
+              "suspended",
+              "resuming"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "session_id",
+          "url",
+          "status",
+          "tags",
+          "org_id",
+          "created_at",
+          "updated_at",
+          "acus_consumed",
+          "pull_requests",
+          "session_analysis",
+          "initial_user_message"
+        ],
+        "type": "object"
+      },
+      "SuccessResponse": {
+        "properties": {
+          "status": {
+            "default": "success",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "OrganizationResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "org_admin_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "org_member_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "org_name": {
+            "type": "string"
+          },
+          "org_user_count": {
+            "default": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "org_id",
+          "org_name",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisIssue": {
+        "properties": {
+          "impact": {
+            "type": "string"
+          },
+          "issue": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue",
+          "impact",
+          "label"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_EnterpriseGroupResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseGroupResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "AuditLogEntry": {
+        "additionalProperties": true,
+        "description": "An audit log entry.",
+        "properties": {
+          "audit_log_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "audit_log_id"
+        ],
+        "type": "object"
+      },
+      "ServiceKeyRequest": {
+        "properties": {
+          "org_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "OrganizationUpdate": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "max_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "PaginatedResponse_ApiKeyResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ApiKeyResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "ConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_org_id": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_user": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "nullable": true
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date",
+          "consumption_by_org_id"
+        ],
+        "type": "object"
+      },
+      "BillingCycle": {
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_SessionDetailResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionDetailResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "RoleResponse": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
+          },
+          "role_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id",
+          "role_name",
+          "role_type"
+        ],
+        "type": "object"
+      },
+      "SessionResponse": {
+        "properties": {
+          "acus_consumed": {
+            "type": "number"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "pull_requests": {
+            "items": {
+              "$ref": "#/components/schemas/SessionPullRequest"
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "new",
+              "claimed",
+              "running",
+              "exit",
+              "error",
+              "suspended",
+              "resuming"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "session_id",
+          "url",
+          "status",
+          "tags",
+          "org_id",
+          "created_at",
+          "updated_at",
+          "acus_consumed",
+          "pull_requests"
+        ],
+        "type": "object"
+      },
+      "RoleUpdateRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "user_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "user_ids",
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object"
+      },
+      "EnterpriseUserResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "enterprise_role": {
+            "type": "string"
+          },
+          "last_login": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "login_count": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "saml_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "searches_created_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "sessions_created_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "email",
+          "name",
+          "enterprise_role",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisFeedbackItem": {
+        "properties": {
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "excerpt": {
+            "type": "string",
+            "nullable": true
+          },
+          "issue_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "issue_id",
+          "summary",
+          "excerpt",
+          "details"
+        ],
+        "type": "object"
+      },
+      "ApiKeyResponse": {
+        "properties": {
+          "api_key_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "is_service_key": {
+            "type": "boolean"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "org_name": {
+            "type": "string"
+          },
+          "user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "org_id",
+          "org_name",
+          "user_id",
+          "user_email",
+          "is_service_key",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_EnterpriseUserResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseUserResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "UserConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_org_id": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date",
+          "consumption_by_org_id"
+        ],
+        "type": "object"
+      },
+      "EnterpriseOrgCreate": {
+        "properties": {
+          "acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "add_creator_as_member": {
+            "default": true,
+            "type": "boolean"
+          },
+          "display_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "display_name"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_SessionResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisSuggestedPrompt": {
+        "properties": {
+          "feedback_items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionAnalysisFeedbackItem"
+            },
+            "type": "array"
+          },
+          "original_prompt": {
+            "type": "string"
+          },
+          "suggested_prompt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "original_prompt",
+          "suggested_prompt",
+          "feedback_items"
+        ],
+        "type": "object"
+      },
+      "SessionPullRequest": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "EnterprisePlaybookResponse": {
+        "properties": {
+          "access": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "playbook_id",
+          "title",
+          "body",
+          "status",
+          "access",
+          "account_id",
+          "created_at",
+          "updated_at",
+          "created_by_user_id",
+          "created_by_user_name",
+          "updated_by_user_id",
+          "updated_by_user_name"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API Key authentication. Use Personal API Key (apk_user_*) or Service API Key (apk_*) for v1/v2. Use Service User credential (cog_*) for v3."
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}

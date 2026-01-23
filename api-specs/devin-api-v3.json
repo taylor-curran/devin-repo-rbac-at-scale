@@ -1,0 +1,3284 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Devin API v3beta1",
+    "description": "Devin API v3beta1 - Full RBAC support with service user authentication for enterprise and organization management.",
+    "version": "3.0.0-beta1",
+    "contact": {
+      "name": "Cognition Labs",
+      "url": "https://docs.devin.ai"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.devin.ai",
+      "description": "Production API Server"
+    }
+  ],
+  "paths": {
+    "/v3beta1/enterprise/audit-logs": {
+      "get": {
+        "tags": [
+          "audit_logs"
+        ],
+        "summary": "List Audit Logs",
+        "description": "List audit logs for the enterprise.",
+        "operationId": "handle_get_enterprise_audit_logs_v3beta1_enterprise_audit_logs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/AuditLogAction",
+              "nullable": true,
+              "title": "Action"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_AuditLogResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/consumption/cycles": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "List Consumption Cycles",
+        "operationId": "handle_get_consumption_cycles_v3beta1_enterprise_consumption_cycles_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_ConsumptionCycle_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/consumption/daily": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Get Daily Consumption",
+        "description": "Get daily ACU consumption for the entire enterprise.\n\nReturns total ACUs and consumption broken down by date.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass Unix timestamps that align with this\ntimezone offset (e.g., 1733385600 for December 5, 2025 at midnight PST).",
+        "operationId": "handle_get_consumption_daily_v3beta1_enterprise_consumption_daily_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/consumption/daily/organizations/{org_id}": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Get Organization Daily Consumption",
+        "description": "Get daily ACU consumption for a specific organization.\n\nReturns total ACUs and consumption broken down by date for the org.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass Unix timestamps that align with this\ntimezone offset (e.g., 1733385600 for December 5, 2025 at midnight PST).",
+        "operationId": "handle_get_org_consumption_daily_v3beta1_enterprise_consumption_daily_organizations__org_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/consumption/daily/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Get Session Daily Consumption",
+        "description": "Get daily ACU consumption for a specific session.\n\nReturns total ACUs and consumption broken down by date for the session.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass Unix timestamps that align with this\ntimezone offset (e.g., 1733385600 for December 5, 2025 at midnight PST).",
+        "operationId": "handle_get_session_consumption_daily_v3beta1_enterprise_consumption_daily_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/consumption/daily/users/{user_id}": {
+      "get": {
+        "tags": [
+          "consumption"
+        ],
+        "summary": "Get User Daily Consumption",
+        "description": "Get daily ACU consumption for a specific user.\n\nReturns total ACUs and consumption broken down by date for the user.\n\n**Timezone behavior**: Billing cycles use midnight PST (Pacific Standard Time)\nas the day boundary, which corresponds to 08:00:00 UTC. To match the consumption\ndata shown in the Devin dashboard, pass Unix timestamps that align with this\ntimezone offset (e.g., 1733385600 for December 5, 2025 at midnight PST).",
+        "operationId": "handle_get_user_consumption_daily_v3beta1_enterprise_consumption_daily_users__user_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumptionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/idp-groups": {
+      "get": {
+        "tags": [
+          "idp_groups"
+        ],
+        "summary": "List IDP Groups",
+        "operationId": "handle_list_enterprise_idp_groups_v3beta1_enterprise_members_idp_groups_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_IdpGroup_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/idp-groups/{idp_group_name}": {
+      "post": {
+        "tags": [
+          "idp_groups"
+        ],
+        "summary": "Assign IDP Group",
+        "operationId": "handle_assign_enterprise_idp_group_role_v3beta1_enterprise_members_idp_groups__idp_group_name__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idp_group_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdpGroupUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdpGroup"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/service-users": {
+      "get": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "List Service Users",
+        "description": "List service users in the enterprise.",
+        "operationId": "handle_list_enterprise_service_users_v3beta1_enterprise_members_service_users_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_ServiceUser_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/service-users/{service_user_id}": {
+      "post": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "Assign Service User",
+        "description": "Assign enterprise role to service user.",
+        "operationId": "handle_assign_enterprise_service_user_role_v3beta1_enterprise_members_service_users__service_user_id__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceUserUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUser"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "Update Service User",
+        "description": "Update enterprise role for service user.",
+        "operationId": "handle_update_enterprise_service_user_role_v3beta1_enterprise_members_service_users__service_user_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceUserUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUser"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "Delete Service User",
+        "operationId": "handle_remove_enterprise_service_user_v3beta1_enterprise_members_service_users__service_user_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "service_user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUser"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "List Users",
+        "operationId": "handle_list_enterprise_users_v3beta1_enterprise_members_users_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_User_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Invite Users",
+        "operationId": "handle_bulk_invite_enterprise_users_v3beta1_enterprise_members_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserBulkCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/members/users/{user_id}": {
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update User",
+        "operationId": "handle_update_enterprise_user_role_v3beta1_enterprise_members_users__user_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Delete User",
+        "operationId": "handle_remove_enterprise_user_v3beta1_enterprise_members_users__user_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations": {
+      "get": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "List Organizations",
+        "description": "List organizations in the enterprise.",
+        "operationId": "handle_get_organizations_v3beta1_enterprise_organizations_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_OrganizationResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Create Organization",
+        "description": "Create a new organization in this enterprise",
+        "operationId": "handle_create_organization_v3beta1_enterprise_organizations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}": {
+      "patch": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Update Organization",
+        "description": "Update an organization's name and/or ACU limits",
+        "operationId": "handle_update_organization_v3beta1_enterprise_organizations__org_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrganizationUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "organizations"
+        ],
+        "summary": "Delete Organization",
+        "description": "Delete an organization from this enterprise",
+        "operationId": "handle_delete_organization_v3beta1_enterprise_organizations__org_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/audit-logs": {
+      "get": {
+        "tags": [
+          "audit_logs"
+        ],
+        "summary": "List Organization Audit Logs",
+        "description": "List audit logs for the organization.",
+        "operationId": "handle_get_org_audit_logs_v3beta1_enterprise_organizations__org_id__audit_logs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "time_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Time After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/AuditLogAction",
+              "nullable": true,
+              "title": "Action"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_AuditLogResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/git-providers/permissions": {
+      "get": {
+        "tags": [
+          "git_permissions"
+        ],
+        "summary": "List Git Permissions",
+        "description": "List git permissions for the organization.",
+        "operationId": "handle_get_organization_git_permissions_v3beta1_enterprise_organizations__org_id__git_providers_permissions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_GitPermissionResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "git_permissions"
+        ],
+        "summary": "Create Git Permissions",
+        "operationId": "handle_bulk_create_organization_git_permissions_v3beta1_enterprise_organizations__org_id__git_providers_permissions_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GitPermissionBulkCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/GitPermissionResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/members/idp-groups/{idp_group_name}": {
+      "get": {
+        "tags": [
+          "idp_groups"
+        ],
+        "summary": "Get Organization IDP Group",
+        "operationId": "handle_get_organization_idp_group_v3beta1_enterprise_organizations__org_id__members_idp_groups__idp_group_name__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "idp_group_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdpGroup"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "idp_groups"
+        ],
+        "summary": "Assign Organization IDP Group",
+        "operationId": "handle_assign_organization_idp_group_role_v3beta1_enterprise_organizations__org_id__members_idp_groups__idp_group_name__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "idp_group_name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdpGroupUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdpGroup"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/members/service-users": {
+      "get": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "List Organization Service Users",
+        "description": "List service users in the organization.",
+        "operationId": "handle_list_organization_service_users_v3beta1_enterprise_organizations__org_id__members_service_users_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_ServiceUser_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/members/service-users/{service_user_id}": {
+      "post": {
+        "tags": [
+          "service_users"
+        ],
+        "summary": "Assign Organization Service User",
+        "description": "Assign organization role to service user.",
+        "operationId": "handle_assign_organization_service_user_role_v3beta1_enterprise_organizations__org_id__members_service_users__service_user_id__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "service_user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceUserUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceUser"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/members/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "List Organization Users",
+        "operationId": "handle_list_organization_users_v3beta1_enterprise_organizations__org_id__members_users_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_User_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/organizations/{org_id}/members/users/{user_id}": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Assign Organization User",
+        "operationId": "handle_assign_organization_user_role_v3beta1_enterprise_organizations__org_id__members_users__user_id__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/playbooks": {
+      "get": {
+        "summary": "List all playbooks.",
+        "operationId": "handle_list_playbooks_v3beta1_enterprise_playbooks_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_PlaybookResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an enterprise-level playbook",
+        "operationId": "handle_create_playbook_v3beta1_enterprise_playbooks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaybookCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/roles": {
+      "get": {
+        "tags": [
+          "roles"
+        ],
+        "summary": "List Roles",
+        "description": "Get roles for this enterprise",
+        "operationId": "handle_get_roles_v3beta1_enterprise_roles_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_Role_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/enterprise/self": {
+      "get": {
+        "tags": [
+          "self"
+        ],
+        "summary": "Get Self",
+        "operationId": "handle_get_self_v3beta1_enterprise_self_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v3beta1/organizations/{org_id}/playbooks": {
+      "get": {
+        "tags": [
+          "playbooks"
+        ],
+        "summary": "List org-level playbooks",
+        "description": "List playbooks for an organization.",
+        "operationId": "handle_list_playbooks_v3beta1_organizations__org_id__playbooks_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The org id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_PlaybookResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/v3beta1/organizations/{org_id}/sessions": {
+      "get": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "List Sessions",
+        "description": "List sessions.",
+        "operationId": "handle_get_sessions_v3beta1_organizations__org_id__sessions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 200,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "session_ids",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Session Ids"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Created After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Created Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_after",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Updated After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "updated_before",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "title": "Updated Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "required": false,
+            "schema": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Tags"
+            }
+          },
+          {
+            "in": "query",
+            "name": "playbook_id",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Playbook Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "origins",
+            "required": false,
+            "schema": {
+              "items": {
+                "enum": [
+                  "webapp",
+                  "slack",
+                  "teams",
+                  "api",
+                  "linear",
+                  "jira",
+                  "other"
+                ],
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Origins"
+            }
+          },
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The org id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_SessionResponse_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Create Session",
+        "description": "Create a new session",
+        "operationId": "handle_create_session_v3beta1_organizations__org_id__sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The org id"
+          }
+        ]
+      }
+    },
+    "/v3beta1/organizations/{org_id}/sessions/{devin_id}": {
+      "delete": {
+        "tags": [
+          "sessions"
+        ],
+        "summary": "Terminate Session",
+        "description": "Terminate session",
+        "operationId": "handle_terminate_session_v3beta1_organizations__org_id__sessions__devin_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "devin_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Devin Id"
+            }
+          },
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "title": "Org Id"
+            }
+          },
+          {
+            "description": "Whether to archive the devin session",
+            "in": "query",
+            "name": "archive",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "Whether to archive the devin session",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "SessionSecretInput": {
+        "description": "Input model for a session secret provided via API.",
+        "properties": {
+          "key": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "sensitive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "value": {
+            "maxLength": 65536,
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "OrganizationCreateRequest": {
+        "properties": {
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "PlaybookResponse": {
+        "properties": {
+          "access_type": {
+            "enum": [
+              "enterprise",
+              "org"
+            ],
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "playbook_id",
+          "title",
+          "body",
+          "macro",
+          "created_by",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "access_type",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "GitPermissionBulkCreateRequest": {
+        "properties": {
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/GitPermissionCreateRequest"
+            },
+            "maxItems": 200,
+            "type": "array"
+          }
+        },
+        "required": [
+          "permissions"
+        ],
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ServiceUserUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "GitPermissionResponse": {
+        "properties": {
+          "git_connection_id": {
+            "type": "string"
+          },
+          "git_permission_id": {
+            "type": "string"
+          },
+          "group_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "repo_path": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "git_permission_id",
+          "git_connection_id"
+        ],
+        "type": "object"
+      },
+      "OrganizationUpdateRequest": {
+        "properties": {
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "PaginatedResponse_OrganizationResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "User": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "role_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/RoleAssignment"
+            },
+            "type": "array"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "email",
+          "name",
+          "role_assignments"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_GitPermissionResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GitPermissionResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_PlaybookResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlaybookResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "RoleAssignment": {
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_User_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_AuditLogResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "OrganizationResponse": {
+        "properties": {
+          "created_at": {
+            "type": "integer"
+          },
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "org_id",
+          "name",
+          "created_at",
+          "updated_at",
+          "max_session_acu_limit",
+          "max_cycle_acu_limit"
+        ],
+        "type": "object"
+      },
+      "ConsumptionCycle": {
+        "properties": {
+          "after": {
+            "type": "integer"
+          },
+          "before": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "before",
+          "after"
+        ],
+        "type": "object"
+      },
+      "AuditLogAction": {
+        "enum": [
+          "login",
+          "create_org",
+          "update_org",
+          "delete_org",
+          "revoke_all_enterprise_api_keys",
+          "add_enterprise_member",
+          "delete_member",
+          "add_member",
+          "assign_roles",
+          "update_role",
+          "create_role",
+          "delete_role",
+          "add_group_membership",
+          "update_group_membership",
+          "delete_group_membership",
+          "create_knowledge",
+          "edit_knowledge",
+          "delete_knowledge",
+          "create_folder",
+          "update_folder",
+          "delete_folder",
+          "create_session",
+          "sleep_session",
+          "terminate_session",
+          "send_message",
+          "create_service_api_key",
+          "revoke_enterprise_api_key",
+          "create_gitlab_integration",
+          "delete_gitlab_integration",
+          "create_azure_devops_integration",
+          "delete_azure_devops_integration",
+          "remove_repo_from_devin",
+          "update_enterprise_hypervisor_settings",
+          "update_enterprise_settings",
+          "update_org_settings",
+          "ai_guardrail_violation",
+          "approve_deploy",
+          "search_query",
+          "create_org_api_key",
+          "create_user_api_key",
+          "view_org_api_key",
+          "view_user_api_key",
+          "create_secret",
+          "update_secret",
+          "delete_secret",
+          "create_playbook",
+          "update_playbook",
+          "delete_playbook",
+          "enable_persona",
+          "disable_persona",
+          "delete_persona",
+          "start_repo_setup",
+          "delete_repo_setup",
+          "finish_repo_setup",
+          "github_integration_deleted",
+          "create_github_integration",
+          "delete_github_integration",
+          "create_bitbucket_integration",
+          "delete_bitbucket_integration",
+          "mcp_server_install",
+          "mcp_server_enable",
+          "mcp_server_disable",
+          "mcp_server_delete",
+          "create_mcp_validation_session",
+          "create_service_user",
+          "delete_service_user",
+          "assign_service_user_role",
+          "remove_service_user_role",
+          "create_git_permission",
+          "delete_git_permission",
+          "update_git_permission",
+          "create_maintenance_task",
+          "update_maintenance_task",
+          "delete_maintenance_task",
+          "create_snapshot_script",
+          "schedule_snapshot_script",
+          "execute_snapshot_script",
+          "update_repo_setup_steering_knowledge",
+          "delete_repo_setup_steering_knowledge",
+          "set_org_group_limits",
+          "create_join_request",
+          "automatic_join_event",
+          "reject_join_request"
+        ],
+        "type": "string"
+      },
+      "PlaybookCreateRequest": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "ConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionByDateResponse"
+            },
+            "type": "array"
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date"
+        ],
+        "type": "object"
+      },
+      "ConsumptionByDateResponse": {
+        "properties": {
+          "acus": {
+            "type": "number"
+          },
+          "date": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "acus"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_ServiceUser_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ServiceUser"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "ServiceUser": {
+        "properties": {
+          "expires_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "role_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/RoleAssignment"
+            },
+            "type": "array"
+          },
+          "service_user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "service_user_id",
+          "name",
+          "expires_at",
+          "role_assignments"
+        ],
+        "type": "object"
+      },
+      "SessionResponse": {
+        "properties": {
+          "acus_consumed": {
+            "type": "number"
+          },
+          "child_session_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "is_advanced": {
+            "default": false,
+            "type": "boolean"
+          },
+          "is_archived": {
+            "default": false,
+            "type": "boolean"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "parent_session_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pull_requests": {
+            "items": {
+              "$ref": "#/components/schemas/SessionPullRequest"
+            },
+            "type": "array"
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "new",
+              "claimed",
+              "running",
+              "exit",
+              "error",
+              "suspended",
+              "resuming"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "session_id",
+          "url",
+          "status",
+          "tags",
+          "org_id",
+          "created_at",
+          "updated_at",
+          "acus_consumed",
+          "pull_requests"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_Role_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "UserBulkCreateRequest": {
+        "properties": {
+          "emails": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "enterprise_role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "emails",
+          "enterprise_role_id"
+        ],
+        "type": "object"
+      },
+      "IdpGroup": {
+        "properties": {
+          "idp_group_name": {
+            "type": "string"
+          },
+          "role_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/RoleAssignment"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "idp_group_name",
+          "role_assignments"
+        ],
+        "type": "object"
+      },
+      "SessionCreateRequest": {
+        "properties": {
+          "advanced_mode": {
+            "enum": [
+              "analyze",
+              "create",
+              "improve",
+              "batch",
+              "manage"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "bypass_approval": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "child_playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "create_as_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "knowledge_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "max_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "repos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "secret_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_secrets": {
+            "items": {
+              "$ref": "#/components/schemas/SessionSecretInput"
+            },
+            "type": "array"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object"
+      },
+      "GitPermissionCreateRequest": {
+        "properties": {
+          "git_connection_id": {
+            "type": "string"
+          },
+          "group_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "repo_path": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "git_connection_id"
+        ],
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object"
+      },
+      "AuditLogResponse": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/AuditLogAction"
+          },
+          "audit_log_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "service_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "service_user_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "audit_log_id",
+          "action",
+          "created_at",
+          "org_id",
+          "user_id",
+          "user_email",
+          "service_user_id",
+          "service_user_name",
+          "data"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_ConsumptionCycle_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionCycle"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "IdpGroupUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "SelfResponse": {
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "service_user_id": {
+            "type": "string"
+          },
+          "service_user_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "service_user_id",
+          "service_user_name",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_SessionResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "SessionPullRequest": {
+        "properties": {
+          "pr_state": {
+            "type": "string",
+            "nullable": true
+          },
+          "pr_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pr_url",
+          "pr_state"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_IdpGroup_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/IdpGroup"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "Role": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
+          },
+          "role_type": {
+            "enum": [
+              "enterprise",
+              "org"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_name",
+          "role_id",
+          "role_type"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API Key authentication. Use Personal API Key (apk_user_*) or Service API Key (apk_*) for v1/v2. Use Service User credential (cog_*) for v3."
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ]
+}
