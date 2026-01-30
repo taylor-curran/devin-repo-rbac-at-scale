@@ -56,23 +56,6 @@
       }
     },
     "/v1/knowledge": {
-      "get": {
-        "summary": "List all knowledge",
-        "description": "List all knowledge entries and folders for the organization.",
-        "operationId": "get_all_knowledge_v1_knowledge_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AllKnowledgeResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        }
-      },
       "post": {
         "summary": "Create knowledge entry",
         "description": "Create a new knowledge entry for the organization.",
@@ -109,9 +92,56 @@
             "description": "Validation Error"
           }
         }
+      },
+      "get": {
+        "summary": "List all knowledge",
+        "description": "List all knowledge entries and folders for the organization.",
+        "operationId": "get_all_knowledge_v1_knowledge_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllKnowledgeResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
       }
     },
     "/v1/knowledge/{note_id}": {
+      "delete": {
+        "summary": "Delete knowledge entry",
+        "description": "Delete a knowledge entry from the organization.",
+        "operationId": "delete_knowledge_v1_knowledge__note_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "note_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
       "put": {
         "summary": "Update knowledge entry",
         "description": "Update an existing knowledge entry.",
@@ -158,59 +188,9 @@
             "description": "Validation Error"
           }
         }
-      },
-      "delete": {
-        "summary": "Delete knowledge entry",
-        "description": "Delete a knowledge entry from the organization.",
-        "operationId": "delete_knowledge_v1_knowledge__note_id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "note_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        }
       }
     },
     "/v1/playbooks": {
-      "get": {
-        "summary": "List playbooks",
-        "description": "List all team playbooks for the organization.",
-        "operationId": "get_playbooks_v1_playbooks_get",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/PlaybookResponse"
-                  },
-                  "type": "array"
-                }
-              }
-            },
-            "description": "Successful Response"
-          }
-        }
-      },
       "post": {
         "summary": "Create playbook",
         "description": "Create a new team playbook for the organization.",
@@ -247,9 +227,66 @@
             "description": "Validation Error"
           }
         }
+      },
+      "get": {
+        "summary": "List playbooks",
+        "description": "List all team playbooks for the organization.",
+        "operationId": "get_playbooks_v1_playbooks_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PlaybookResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        }
       }
     },
     "/v1/playbooks/{playbook_id}": {
+      "delete": {
+        "summary": "Delete playbook",
+        "description": "Delete a team playbook from the organization.",
+        "operationId": "delete_playbook_v1_playbooks__playbook_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "playbook_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePlaybookResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
       "get": {
         "summary": "Get playbook",
         "description": "Get a specific team playbook by ID.",
@@ -333,43 +370,6 @@
             "description": "Validation Error"
           }
         }
-      },
-      "delete": {
-        "summary": "Delete playbook",
-        "description": "Delete a team playbook from the organization.",
-        "operationId": "delete_playbook_v1_playbooks__playbook_id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "playbook_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeletePlaybookResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        }
       }
     },
     "/v1/secrets": {
@@ -434,6 +434,43 @@
       }
     },
     "/v1/sessions": {
+      "post": {
+        "summary": "Create a new session",
+        "description": "Create a new Devin session with the specified prompt and configuration options.",
+        "operationId": "create_session_endpoint_v1_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionParams"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSessionResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        }
+      },
       "get": {
         "summary": "List sessions",
         "description": "List all Devin sessions for your organization. Supports pagination and filtering by tags and user email.",
@@ -477,6 +514,7 @@
                 "type": "string"
               },
               "type": "array",
+              "nullable": true,
               "description": "List of tags to filter sessions by.",
               "title": "Tags"
             }
@@ -516,43 +554,6 @@
             "description": "Validation Error"
           }
         }
-      },
-      "post": {
-        "summary": "Create a new session",
-        "description": "Create a new Devin session with the specified prompt and configuration options.",
-        "operationId": "create_session_endpoint_v1_sessions_post",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateSessionParams"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateSessionResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        }
       }
     },
     "/v1/sessions/{session_id}": {
@@ -576,43 +577,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetSessionResponse"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Terminate a session",
-        "description": "Terminate an active Devin session. The session must not already be in an exited state.",
-        "operationId": "terminate_session_endpoint_v1_sessions__session_id__delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "session_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TerminateSessionResponse"
                 }
               }
             },
@@ -734,6 +698,26 @@
   },
   "components": {
     "schemas": {
+      "CreateSessionResponse": {
+        "description": "Response body returned when a session is successfully created.",
+        "properties": {
+          "is_new_session": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "session_id",
+          "url"
+        ],
+        "type": "object"
+      },
       "SessionSecretInput": {
         "description": "Input model for a session secret provided via API.",
         "properties": {
@@ -754,6 +738,232 @@
         "required": [
           "key",
           "value"
+        ],
+        "type": "object"
+      },
+      "FolderResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "KnowledgeCreatedBy": {
+        "description": "Information about who created a knowledge entry.",
+        "properties": {
+          "full_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "image_url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "full_name"
+        ],
+        "type": "object"
+      },
+      "SecretMetadata": {
+        "description": "Metadata about a stored secret.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "cookie",
+              "key-value",
+              "dictionary",
+              "totp"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object"
+      },
+      "ListSessionsResponse": {
+        "description": "Response containing a list of sessions.",
+        "properties": {
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/SessionSummary"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "sessions"
+        ],
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "AllKnowledgeResponse": {
+        "properties": {
+          "folders": {
+            "items": {
+              "$ref": "#/components/schemas/FolderResponse"
+            },
+            "type": "array"
+          },
+          "knowledge": {
+            "items": {
+              "$ref": "#/components/schemas/KnowledgeResponse"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "knowledge",
+          "folders"
+        ],
+        "type": "object"
+      },
+      "DeletePlaybookResponse": {
+        "description": "Response for successful playbook deletion.",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "EditTagsResponse": {
+        "description": "Response for successful tag update.",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "type": "object"
+      },
+      "PullRequestInfo": {
+        "description": "Pull request information associated with a session.",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "KnowledgeResponse": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "created_by": {
+            "$ref": "#/components/schemas/KnowledgeCreatedBy",
+            "nullable": true
+          },
+          "id": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent_folder_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned_repo": {
+            "type": "string",
+            "nullable": true
+          },
+          "trigger_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "body",
+          "trigger_description",
+          "id",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "DeleteSecretResponse": {
+        "description": "Response for successful secret deletion.",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "Body_upload_attachment_customer_endpoint_v1_attachments_post": {
+        "properties": {
+          "file": {
+            "format": "binary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
         ],
         "type": "object"
       },
@@ -831,23 +1041,55 @@
         ],
         "type": "object"
       },
-      "KnowledgeCreatedBy": {
-        "description": "Information about who created a knowledge entry.",
+      "CreatePlaybookRequest": {
         "properties": {
-          "full_name": {
+          "body": {
+            "minLength": 1,
             "type": "string"
           },
-          "id": {
+          "macro": {
             "type": "string",
             "nullable": true
           },
-          "image_url": {
-            "type": "string",
-            "nullable": true
+          "title": {
+            "minLength": 1,
+            "type": "string"
           }
         },
         "required": [
-          "full_name"
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "CreateKnowledgeParams": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent_folder_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "pinned_repo": {
+            "type": "string",
+            "nullable": true
+          },
+          "trigger_description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "body",
+          "trigger_description"
         ],
         "type": "object"
       },
@@ -918,27 +1160,93 @@
         ],
         "type": "object"
       },
-      "Body_upload_attachment_customer_endpoint_v1_attachments_post": {
+      "UpdatePlaybookResponse": {
+        "description": "Response for successful playbook update.",
         "properties": {
-          "file": {
-            "format": "binary",
+          "status": {
             "type": "string"
           }
         },
         "required": [
-          "file"
+          "status"
         ],
         "type": "object"
       },
-      "HTTPValidationError": {
+      "SessionMessage": {
+        "description": "A message in a Devin session.",
         "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array"
+          "event_id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
           }
         },
+        "required": [
+          "type",
+          "event_id",
+          "message",
+          "timestamp"
+        ],
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "msg": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object"
+      },
+      "MessageSentResponse": {
+        "description": "Response when a message is sent to a session that is already in a specific state.",
+        "properties": {
+          "detail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "detail"
+        ],
         "type": "object"
       },
       "SessionSummary": {
@@ -1012,83 +1320,6 @@
         ],
         "type": "object"
       },
-      "EditSessionTagsParams": {
-        "properties": {
-          "tags": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "tags"
-        ],
-        "type": "object"
-      },
-      "CreateSessionResponse": {
-        "description": "Response body returned when a session is successfully created.",
-        "properties": {
-          "is_new_session": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "session_id": {
-            "type": "string"
-          },
-          "url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "session_id",
-          "url"
-        ],
-        "type": "object"
-      },
-      "CreateKnowledgeParams": {
-        "properties": {
-          "body": {
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "parent_folder_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "pinned_repo": {
-            "type": "string",
-            "nullable": true
-          },
-          "trigger_description": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "body",
-          "trigger_description"
-        ],
-        "type": "object"
-      },
-      "DeleteSecretResponse": {
-        "description": "Response for successful secret deletion.",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "message"
-        ],
-        "type": "object"
-      },
       "PostMessageParams": {
         "properties": {
           "message": {
@@ -1097,236 +1328,6 @@
         },
         "required": [
           "message"
-        ],
-        "type": "object"
-      },
-      "MessageSentResponse": {
-        "description": "Response when a message is sent to a session that is already in a specific state.",
-        "properties": {
-          "detail": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "detail"
-        ],
-        "type": "object"
-      },
-      "PullRequestInfo": {
-        "description": "Pull request information associated with a session.",
-        "properties": {
-          "url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "url"
-        ],
-        "type": "object"
-      },
-      "AllKnowledgeResponse": {
-        "properties": {
-          "folders": {
-            "items": {
-              "$ref": "#/components/schemas/FolderResponse"
-            },
-            "type": "array"
-          },
-          "knowledge": {
-            "items": {
-              "$ref": "#/components/schemas/KnowledgeResponse"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "knowledge",
-          "folders"
-        ],
-        "type": "object"
-      },
-      "TerminateSessionResponse": {
-        "description": "Response for successful session termination.",
-        "properties": {
-          "detail": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "detail"
-        ],
-        "type": "object"
-      },
-      "UpdatePlaybookResponse": {
-        "description": "Response for successful playbook update.",
-        "properties": {
-          "status": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "status"
-        ],
-        "type": "object"
-      },
-      "EditTagsResponse": {
-        "description": "Response for successful tag update.",
-        "properties": {
-          "detail": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "detail"
-        ],
-        "type": "object"
-      },
-      "KnowledgeResponse": {
-        "properties": {
-          "body": {
-            "type": "string"
-          },
-          "created_at": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "created_by": {
-            "$ref": "#/components/schemas/KnowledgeCreatedBy",
-            "nullable": true
-          },
-          "id": {
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "parent_folder_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "pinned_repo": {
-            "type": "string",
-            "nullable": true
-          },
-          "trigger_description": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "body",
-          "trigger_description",
-          "id",
-          "created_at"
-        ],
-        "type": "object"
-      },
-      "CreatePlaybookRequest": {
-        "properties": {
-          "body": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "body"
-        ],
-        "type": "object"
-      },
-      "FolderResponse": {
-        "properties": {
-          "created_at": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "name",
-          "description",
-          "created_at"
-        ],
-        "type": "object"
-      },
-      "SecretMetadata": {
-        "description": "Metadata about a stored secret.",
-        "properties": {
-          "created_at": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true
-          },
-          "id": {
-            "type": "string"
-          },
-          "key": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "enum": [
-              "cookie",
-              "key-value",
-              "dictionary",
-              "totp"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "id",
-          "type"
-        ],
-        "type": "object"
-      },
-      "ValidationError": {
-        "properties": {
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "type": "array"
-          },
-          "msg": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "loc",
-          "msg",
-          "type"
         ],
         "type": "object"
       },
@@ -1344,9 +1345,9 @@
             "description": "List of knowledge IDs to use. If None, use all knowledge. If empty list, use no knowledge."
           },
           "max_acu_limit": {
-            "minimum": 0,
             "exclusiveMinimum": true,
             "type": "integer",
+            "minimum": 0,
             "nullable": true,
             "description": "Maximum ACU limit, must be positive"
           },
@@ -1397,66 +1398,17 @@
         ],
         "type": "object"
       },
-      "SessionMessage": {
-        "description": "A message in a Devin session.",
+      "EditSessionTagsParams": {
         "properties": {
-          "event_id": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "origin": {
-            "type": "string",
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "user_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "username": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "type",
-          "event_id",
-          "message",
-          "timestamp"
-        ],
-        "type": "object"
-      },
-      "DeletePlaybookResponse": {
-        "description": "Response for successful playbook deletion.",
-        "properties": {
-          "status": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "status"
-        ],
-        "type": "object"
-      },
-      "ListSessionsResponse": {
-        "description": "Response containing a list of sessions.",
-        "properties": {
-          "sessions": {
+          "tags": {
             "items": {
-              "$ref": "#/components/schemas/SessionSummary"
+              "type": "string"
             },
             "type": "array"
           }
         },
         "required": [
-          "sessions"
+          "tags"
         ],
         "type": "object"
       }

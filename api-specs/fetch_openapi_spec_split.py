@@ -2,112 +2,93 @@
 """
 Fetch official OpenAPI specs from Devin API documentation.
 Generates SEPARATE spec files for v1, v2, and v3beta1.
+
+Auto-discovers endpoints by scraping the docs sidebar navigation.
 """
 
 import re
 import yaml
 import json
 import requests
+from bs4 import BeautifulSoup
 from pathlib import Path
 
 BASE_URL = "https://docs.devin.ai"
 
-ENDPOINT_PATHS = {
+# Supplementary endpoints that may not appear in sidebar but exist in docs
+# These are checked in addition to auto-discovered endpoints
+# NOTE: Only add endpoints here that are confirmed to exist (not 404)
+SUPPLEMENTARY_ENDPOINTS = {
+    "v1": [],
+    "v2": [],
+    "v3": [
+        # Hypervisors - not always linked in sidebar
+        "/api-reference/v3/hypervisors/hypervisors",
+        # Git connections - not always linked in sidebar
+        "/api-reference/v3/git-connections/git-providers-connections",
+        # Service user provisioning - not always linked in sidebar
+        "/api-reference/v3/service-users/provision-enterprise-service-users",
+        # Secrets endpoints
+        "/api-reference/v3/secrets/organizations-secrets",
+        "/api-reference/v3/secrets/post-organizations-secrets",
+        "/api-reference/v3/secrets/delete-organizations-secrets",
+    ],
+}
+
+# Fallback hardcoded paths (used only if auto-discovery fails completely)
+FALLBACK_ENDPOINT_PATHS = {
     "v1": [
         "/api-reference/v1/sessions/list-sessions",
         "/api-reference/v1/sessions/create-a-new-devin-session",
-        "/api-reference/v1/sessions/retrieve-details-about-an-existing-session",
-        "/api-reference/v1/sessions/send-a-message-to-an-existing-devin-session",
-        "/api-reference/v1/sessions/terminate-a-session",
-        "/api-reference/v1/sessions/update-session-tags",
-        "/api-reference/v1/attachments/upload-files-for-devin-to-work-with",
-        "/api-reference/v1/knowledge/list-knowledge",
-        "/api-reference/v1/knowledge/create-knowledge",
-        "/api-reference/v1/knowledge/update-knowledge",
-        "/api-reference/v1/knowledge/delete-knowledge",
-        "/api-reference/v1/playbooks/list-playbooks",
-        "/api-reference/v1/playbooks/create-playbook",
-        "/api-reference/v1/playbooks/get-playbook",
-        "/api-reference/v1/playbooks/update-playbook",
-        "/api-reference/v1/playbooks/delete-playbook",
-        "/api-reference/v1/secrets/list-secrets",
-        "/api-reference/v1/secrets/delete-secret",
     ],
     "v2": [
         "/api-reference/v2/organizations/list-organizations",
-        "/api-reference/v2/organizations/create-organization",
-        "/api-reference/v2/organizations/get-organization-details",
-        "/api-reference/v2/organizations/update-organization",
-        "/api-reference/v2/organizations/delete-organization",
-        "/api-reference/v2/members/list-enterprise-members",
-        "/api-reference/v2/members/get-member-details",
-        "/api-reference/v2/members/invite-enterprise-members",
-        "/api-reference/v2/members/update-member-roles",
-        "/api-reference/v2/members/delete-enterprise-member",
-        "/api-reference/v2/members/list-roles",
-        "/api-reference/v2/groups/list-enterprise-groups",
-        "/api-reference/v2/groups/add-enterprise-groups",
-        "/api-reference/v2/groups/get-group-details",
-        "/api-reference/v2/api-keys/provision-service-key",
-        "/api-reference/v2/api-keys/list-enterprise-api-keys",
-        "/api-reference/v2/api-keys/revoke-enterprise-api-key",
-        "/api-reference/v2/api-keys/revoke-all-enterprise-api-keys",
-        "/api-reference/v2/audit-logs",
-        "/api-reference/v2/consumption/consumption-cycles",
-        "/api-reference/v2/consumption/daily-consumption",
-        "/api-reference/v2/consumption/user-daily-consumption",
-        "/api-reference/v2/consumption/pr-metrics",
-        "/api-reference/v2/consumption/sessions-metrics",
-        "/api-reference/v2/consumption/searches-metrics",
-        "/api-reference/v2/consumption/usage-metrics",
-        "/api-reference/v2/sessions/list-enterprise-sessions",
-        "/api-reference/v2/sessions/list-enterprise-sessions-insights",
-        "/api-reference/v2/sessions/get-enterprise-session",
-        "/api-reference/v2/playbooks/list-playbooks",
-        "/api-reference/v2/playbooks/create-playbook",
-        "/api-reference/v2/playbooks/get-playbook",
-        "/api-reference/v2/playbooks/update-playbook",
     ],
     "v3": [
         "/api-reference/v3/self/self",
-        "/api-reference/v3/organizations/organizations",
-        "/api-reference/v3/organizations/post-organizations",
-        "/api-reference/v3/organizations/patch-organizations",
-        "/api-reference/v3/organizations/delete-organizations",
-        "/api-reference/v3/service-users/members-service-users",
-        "/api-reference/v3/service-users/post-members-service-users",
-        "/api-reference/v3/service-users/patch-members-service-users",
-        "/api-reference/v3/service-users/delete-members-service-users",
-        "/api-reference/v3/service-users/organizations-members-service-users",
-        "/api-reference/v3/service-users/post-organizations-members-service-users",
-        "/api-reference/v3/users/members-users",
-        "/api-reference/v3/users/post-members-users",
-        "/api-reference/v3/users/patch-members-users",
-        "/api-reference/v3/users/delete-members-users",
-        "/api-reference/v3/users/organizations-members-users",
-        "/api-reference/v3/users/post-organizations-members-users",
-        "/api-reference/v3/idp-groups/members-idp-groups",
-        "/api-reference/v3/idp-groups/post-members-idp-groups",
-        "/api-reference/v3/idp-groups/organizations-members-idp-groups",
-        "/api-reference/v3/idp-groups/post-organizations-members-idp-groups",
-        "/api-reference/v3/roles/roles",
-        "/api-reference/v3/audit-logs/enterprise-audit-logs",
-        "/api-reference/v3/audit-logs/organizations-audit-logs",
-        "/api-reference/v3/consumption/consumption-cycles",
-        "/api-reference/v3/consumption/consumption-daily",
-        "/api-reference/v3/consumption/consumption-daily-organizations",
-        "/api-reference/v3/consumption/consumption-daily-users",
-        "/api-reference/v3/consumption/consumption-daily-sessions",
-        "/api-reference/v3/playbooks/enterprise-playbooks",
-        "/api-reference/v3/playbooks/post-enterprise-playbooks",
-        "/api-reference/v3/playbooks/organizations-playbooks",
-        "/api-reference/v3/git-permissions/organizations-git-providers-permissions",
-        "/api-reference/v3/git-permissions/post-organizations-git-providers-permissions",
-        "/api-reference/v3/sessions/organizations-sessions",
-        "/api-reference/v3/sessions/post-organizations-sessions",
-        "/api-reference/v3/sessions/delete-organizations-sessions",
     ],
 }
+
+
+def discover_endpoints_from_sidebar(version: str) -> list[str]:
+    """
+    Auto-discover all endpoint documentation pages by scraping the docs sidebar.
+    This ensures we never miss new endpoints.
+    """
+    overview_url = f"{BASE_URL}/api-reference/{version}/overview"
+    print(f"  🔍 Discovering {version} endpoints from {overview_url}...")
+    
+    try:
+        response = requests.get(overview_url, timeout=30)
+        if response.status_code != 200:
+            print(f"  ⚠️  Could not fetch overview page: HTTP {response.status_code}")
+            return []
+        
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # Find all links in the sidebar that match the API reference pattern
+        endpoints = set()
+        version_pattern = f"/api-reference/{version}/"
+        
+        for link in soup.find_all('a', href=True):
+            href = link['href']
+            # Match links like /api-reference/v3/service-users/provision-enterprise-service-users
+            if href.startswith(version_pattern):
+                # Skip overview and usage-examples pages
+                if '/overview' in href or '/usage-examples' in href or '/structured-output' in href:
+                    continue
+                # Must have at least category/endpoint structure
+                parts = href.replace(version_pattern, '').split('/')
+                if len(parts) >= 2:
+                    endpoints.add(href)
+        
+        discovered = sorted(list(endpoints))
+        print(f"  ✅ Discovered {len(discovered)} endpoints from sidebar")
+        return discovered
+        
+    except Exception as e:
+        print(f"  ❌ Error discovering endpoints: {e}")
+        return []
 
 VERSION_INFO = {
     "v1": {
@@ -297,6 +278,19 @@ def create_version_spec(version: str, specs: list[dict]) -> dict:
                 # Remove nullable from arrays - APIGEE may not support it
                 del result["nullable"]
             
+            # Convert OAS 3.1 exclusiveMinimum/exclusiveMaximum (number) to OAS 3.0 format (boolean)
+            # In OAS 3.1: exclusiveMinimum: 0 means value must be > 0
+            # In OAS 3.0: minimum: 0, exclusiveMinimum: true
+            # Note: isinstance(True, int) is True in Python, so check bool first
+            if "exclusiveMinimum" in result and not isinstance(result["exclusiveMinimum"], bool) and isinstance(result["exclusiveMinimum"], (int, float)):
+                val = result["exclusiveMinimum"]
+                result["minimum"] = val
+                result["exclusiveMinimum"] = True
+            if "exclusiveMaximum" in result and not isinstance(result["exclusiveMaximum"], bool) and isinstance(result["exclusiveMaximum"], (int, float)):
+                val = result["exclusiveMaximum"]
+                result["maximum"] = val
+                result["exclusiveMaximum"] = True
+            
             return result
         elif isinstance(obj, list):
             return [convert_to_oas30(item) for item in obj]
@@ -343,9 +337,8 @@ def create_version_spec(version: str, specs: list[dict]) -> dict:
 def validate_spec(spec: dict, version: str) -> bool:
     """Validate OpenAPI spec."""
     try:
-        from openapi_spec_validator import validate
-        from openapi_spec_validator.versions import OPENAPIV30
-        validate(spec, cls=OPENAPIV30)
+        from openapi_spec_validator import validate_spec as validate_openapi
+        validate_openapi(spec)
         print(f"  ✅ {version} spec is valid!")
         return True
     except ImportError:
@@ -356,26 +349,87 @@ def validate_spec(spec: dict, version: str) -> bool:
         return False
 
 
+def validate_completeness(spec: dict, discovered_paths: list[str], version: str) -> bool:
+    """
+    Validate that the spec contains endpoints for all successfully fetched doc pages.
+    
+    This checks that the number of spec paths roughly matches the number of doc pages
+    that had OpenAPI content. Some variance is expected since multiple doc pages 
+    can map to the same API path (e.g., GET/POST/DELETE on same path).
+    """
+    spec_paths = spec.get("paths", {})
+    spec_path_count = len(spec_paths)
+    doc_count = len(discovered_paths)
+    
+    # Count HTTP methods in spec (each doc page typically = 1 method)
+    method_count = 0
+    for path, methods in spec_paths.items():
+        for method in methods:
+            if method in ["get", "post", "put", "patch", "delete"]:
+                method_count += 1
+    
+    # Check if method count is close to doc count (allow some variance)
+    # Doc pages map to methods, not paths
+    diff = abs(method_count - doc_count)
+    ratio = method_count / doc_count if doc_count > 0 else 0
+    
+    if ratio >= 0.8:  # At least 80% coverage
+        print(f"  ✅ {version} completeness: {method_count} methods from {doc_count} doc pages ({ratio:.0%} coverage)")
+        return True
+    else:
+        print(f"  ⚠️  {version} completeness: only {method_count} methods from {doc_count} doc pages ({ratio:.0%} coverage)")
+        print(f"      Some endpoints may be missing - review supplementary list")
+        return False
+
+
 def main():
-    print("🔍 Fetching official OpenAPI specs from Devin documentation...\n")
+    print("🔍 Fetching official OpenAPI specs from Devin documentation...")
+    print("   Using auto-discovery to find ALL endpoints...\n")
     
     version_specs = {}
+    version_discovered_paths = {}  # Track discovered paths for completeness check
     
-    for version, paths in ENDPOINT_PATHS.items():
+    for version in ["v1", "v2", "v3"]:
+        # Auto-discover endpoints from the docs sidebar
+        paths = discover_endpoints_from_sidebar(version)
+        
+        # Fallback to hardcoded paths if discovery fails
+        if not paths:
+            print(f"  ⚠️  Auto-discovery failed, using fallback paths")
+            paths = FALLBACK_ENDPOINT_PATHS.get(version, [])
+        
+        # Add supplementary endpoints that may not be in sidebar
+        supplementary = SUPPLEMENTARY_ENDPOINTS.get(version, [])
+        if supplementary:
+            paths_set = set(paths)
+            added = 0
+            for ep in supplementary:
+                if ep not in paths_set:
+                    paths.append(ep)
+                    added += 1
+            if added:
+                print(f"  ➕ Added {added} supplementary endpoints")
+        
+        # Store discovered paths for completeness validation
+        version_discovered_paths[version] = paths.copy()
+        
         print(f"\n📦 Processing {version.upper()} API ({len(paths)} endpoints)...")
         
         specs = []
+        successful_paths = []
         for path in paths:
             md_content = fetch_md_content(path)
             if md_content:
                 spec = extract_openapi_from_md(md_content)
                 if spec:
                     specs.append(spec)
+                    successful_paths.append(path)
                     print(f"  ✅ {path}")
                 else:
                     print(f"  ⚠️  No OpenAPI spec found in {path}")
         
         version_specs[version] = specs
+        version_discovered_paths[version] = successful_paths  # Only count successful extractions
     
     print("\n" + "="*60)
     print("🔧 Generating separate spec files...\n")
@@ -400,8 +454,12 @@ def main():
         print(f"📄 {version.upper()}: {json_file.name}")
         print(f"   - {path_count} paths, {schema_count} schemas")
         
-        # Validate
+        # Validate OpenAPI spec structure
         validate_spec(merged_spec, version)
+        
+        # Validate completeness - check if all discovered docs are in the spec
+        discovered = version_discovered_paths.get(version, [])
+        validate_completeness(merged_spec, discovered, version)
         print()
     
     print("="*60)
