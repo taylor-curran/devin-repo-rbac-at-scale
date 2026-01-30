@@ -1948,30 +1948,276 @@
   },
   "components": {
     "schemas": {
-      "UsageMetrics": {
+      "ApiKeyResponse": {
         "properties": {
-          "prs_closed": {
-            "type": "integer"
+          "api_key_value": {
+            "type": "string",
+            "nullable": true
           },
-          "prs_merged": {
-            "type": "integer"
+          "created_at": {
+            "type": "string",
+            "nullable": true
           },
-          "prs_opened": {
-            "type": "integer"
+          "id": {
+            "type": "string"
           },
-          "searches_count": {
-            "type": "integer"
+          "is_service_key": {
+            "type": "boolean"
           },
-          "sessions_count": {
-            "type": "integer"
+          "org_id": {
+            "type": "string"
+          },
+          "org_name": {
+            "type": "string"
+          },
+          "user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
-          "sessions_count",
-          "searches_count",
-          "prs_opened",
-          "prs_closed",
-          "prs_merged"
+          "id",
+          "org_id",
+          "org_name",
+          "user_id",
+          "user_email",
+          "is_service_key",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "BillingCycle": {
+        "properties": {
+          "end": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "start": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object"
+      },
+      "ConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_org_id": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_user": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "nullable": true
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date",
+          "consumption_by_org_id"
+        ],
+        "type": "object"
+      },
+      "CreateEnterprisePlaybookRequest": {
+        "properties": {
+          "body": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "EnterpriseGroupResponse": {
+        "properties": {
+          "group_name": {
+            "type": "string"
+          },
+          "org_count": {
+            "type": "integer"
+          },
+          "role_by_org_id": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          }
+        },
+        "required": [
+          "group_name",
+          "org_count",
+          "role_by_org_id"
+        ],
+        "type": "object"
+      },
+      "EnterpriseIdpGroupsCreate": {
+        "properties": {
+          "group_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "group_names"
+        ],
+        "type": "object"
+      },
+      "EnterpriseMemberInviteRequest": {
+        "properties": {
+          "emails": {
+            "description": "List of email addresses to invite (max 100)",
+            "items": {
+              "format": "email",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "type": "array"
+          }
+        },
+        "required": [
+          "emails"
+        ],
+        "type": "object"
+      },
+      "EnterpriseMemberInviteResponse": {
+        "properties": {
+          "invited_count": {
+            "type": "integer"
+          },
+          "invitee_user_id_to_email": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "status": {
+            "default": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "invited_count",
+          "invitee_user_id_to_email"
+        ],
+        "type": "object"
+      },
+      "EnterpriseOrgCreate": {
+        "properties": {
+          "acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "add_creator_as_member": {
+            "default": true,
+            "type": "boolean"
+          },
+          "display_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "display_name"
+        ],
+        "type": "object"
+      },
+      "EnterprisePlaybookResponse": {
+        "properties": {
+          "access": {
+            "type": "string"
+          },
+          "account_id": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by_user_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "updated_by_user_name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "playbook_id",
+          "title",
+          "body",
+          "status",
+          "access",
+          "account_id",
+          "created_at",
+          "updated_at",
+          "created_by_user_id",
+          "created_by_user_name",
+          "updated_by_user_id",
+          "updated_by_user_name"
         ],
         "type": "object"
       },
@@ -2024,6 +2270,139 @@
         ],
         "type": "object"
       },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "OrganizationResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "org_admin_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "org_member_count": {
+            "default": 0,
+            "type": "integer"
+          },
+          "org_name": {
+            "type": "string"
+          },
+          "org_user_count": {
+            "default": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "org_id",
+          "org_name",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "OrganizationUpdate": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "max_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "PaginatedResponse_ApiKeyResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ApiKeyResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_EnterpriseGroupResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EnterpriseGroupResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
       "PaginatedResponse_EnterpriseUserResponse_": {
         "properties": {
           "has_more": {
@@ -2032,6 +2411,40 @@
           "items": {
             "items": {
               "$ref": "#/components/schemas/EnterpriseUserResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_OrganizationResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponse"
             },
             "type": "array"
           },
@@ -2092,6 +2505,153 @@
         ],
         "type": "object"
       },
+      "PaginatedResponse_SessionResponse_": {
+        "properties": {
+          "has_more": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionResponse"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          },
+          "skip": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_more"
+        ],
+        "type": "object"
+      },
+      "PrMetrics": {
+        "properties": {
+          "prs_closed": {
+            "type": "integer"
+          },
+          "prs_merged": {
+            "type": "integer"
+          },
+          "prs_opened": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prs_opened",
+          "prs_closed",
+          "prs_merged"
+        ],
+        "type": "object"
+      },
+      "RoleResponse": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
+          },
+          "role_type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id",
+          "role_name",
+          "role_type"
+        ],
+        "type": "object"
+      },
+      "RoleUpdateRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "user_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "user_ids",
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "SearchesMetrics": {
+        "properties": {
+          "searches_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "searches_count"
+        ],
+        "type": "object"
+      },
+      "ServiceKeyRequest": {
+        "properties": {
+          "org_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "ServiceKeyResponse": {
+        "properties": {
+          "api_key": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisActionItem": {
+        "properties": {
+          "action_item": {
+            "type": "string"
+          },
+          "issue_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "issue_id",
+          "type",
+          "action_item"
+        ],
+        "type": "object"
+      },
       "SessionAnalysisData": {
         "properties": {
           "action_items": {
@@ -2125,61 +2685,86 @@
         ],
         "type": "object"
       },
-      "OrganizationResponse": {
+      "SessionAnalysisFeedbackItem": {
         "properties": {
-          "created_at": {
-            "format": "date-time",
+          "details": {
             "type": "string",
             "nullable": true
           },
-          "max_cycle_acu_limit": {
-            "type": "integer",
+          "excerpt": {
+            "type": "string",
             "nullable": true
           },
-          "max_session_acu_limit": {
-            "type": "integer",
+          "issue_id": {
+            "type": "string",
             "nullable": true
           },
-          "org_admin_count": {
-            "default": 0,
-            "type": "integer"
-          },
-          "org_id": {
-            "type": "string"
-          },
-          "org_member_count": {
-            "default": 0,
-            "type": "integer"
-          },
-          "org_name": {
-            "type": "string"
-          },
-          "org_user_count": {
-            "default": 0,
-            "type": "integer"
+          "summary": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
-          "org_id",
-          "org_name",
-          "created_at"
+          "issue_id",
+          "summary",
+          "excerpt",
+          "details"
         ],
         "type": "object"
       },
-      "BillingCycle": {
+      "SessionAnalysisIssue": {
         "properties": {
-          "end": {
-            "format": "date-time",
+          "impact": {
             "type": "string"
           },
-          "start": {
-            "format": "date-time",
+          "issue": {
+            "type": "string"
+          },
+          "label": {
             "type": "string"
           }
         },
         "required": [
-          "start",
-          "end"
+          "issue",
+          "impact",
+          "label"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisSuggestedPrompt": {
+        "properties": {
+          "feedback_items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionAnalysisFeedbackItem"
+            },
+            "type": "array"
+          },
+          "original_prompt": {
+            "type": "string"
+          },
+          "suggested_prompt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "original_prompt",
+          "suggested_prompt",
+          "feedback_items"
+        ],
+        "type": "object"
+      },
+      "SessionAnalysisTimelineEvent": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "description"
         ],
         "type": "object"
       },
@@ -2261,72 +2846,6 @@
         ],
         "type": "object"
       },
-      "PaginatedResponse_EnterpriseGroupResponse_": {
-        "properties": {
-          "has_more": {
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/EnterpriseGroupResponse"
-            },
-            "type": "array"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "next_cursor": {
-            "type": "integer",
-            "nullable": true
-          },
-          "skip": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items",
-          "total",
-          "skip",
-          "limit",
-          "has_more"
-        ],
-        "type": "object"
-      },
-      "CreateEnterprisePlaybookRequest": {
-        "properties": {
-          "body": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "minLength": 1,
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "body"
-        ],
-        "type": "object"
-      },
-      "SearchesMetrics": {
-        "properties": {
-          "searches_count": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "searches_count"
-        ],
-        "type": "object"
-      },
       "SessionPullRequest": {
         "properties": {
           "state": {
@@ -2339,271 +2858,6 @@
         },
         "required": [
           "url"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_OrganizationResponse_": {
-        "properties": {
-          "has_more": {
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/OrganizationResponse"
-            },
-            "type": "array"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "next_cursor": {
-            "type": "integer",
-            "nullable": true
-          },
-          "skip": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items",
-          "total",
-          "skip",
-          "limit",
-          "has_more"
-        ],
-        "type": "object"
-      },
-      "ServiceKeyResponse": {
-        "properties": {
-          "api_key": {
-            "type": "string"
-          },
-          "org_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "api_key",
-          "org_id"
-        ],
-        "type": "object"
-      },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array"
-          }
-        },
-        "type": "object"
-      },
-      "EnterpriseGroupResponse": {
-        "properties": {
-          "group_name": {
-            "type": "string"
-          },
-          "org_count": {
-            "type": "integer"
-          },
-          "role_by_org_id": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          }
-        },
-        "required": [
-          "group_name",
-          "org_count",
-          "role_by_org_id"
-        ],
-        "type": "object"
-      },
-      "ApiKeyResponse": {
-        "properties": {
-          "api_key_value": {
-            "type": "string",
-            "nullable": true
-          },
-          "created_at": {
-            "type": "string",
-            "nullable": true
-          },
-          "id": {
-            "type": "string"
-          },
-          "is_service_key": {
-            "type": "boolean"
-          },
-          "org_id": {
-            "type": "string"
-          },
-          "org_name": {
-            "type": "string"
-          },
-          "user_email": {
-            "type": "string",
-            "nullable": true
-          },
-          "user_id": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "id",
-          "org_id",
-          "org_name",
-          "user_id",
-          "user_email",
-          "is_service_key",
-          "created_at"
-        ],
-        "type": "object"
-      },
-      "EnterpriseMemberInviteRequest": {
-        "properties": {
-          "emails": {
-            "description": "List of email addresses to invite (max 100)",
-            "items": {
-              "format": "email",
-              "type": "string"
-            },
-            "maxItems": 100,
-            "type": "array"
-          }
-        },
-        "required": [
-          "emails"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_SessionResponse_": {
-        "properties": {
-          "has_more": {
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/SessionResponse"
-            },
-            "type": "array"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "next_cursor": {
-            "type": "integer",
-            "nullable": true
-          },
-          "skip": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items",
-          "total",
-          "skip",
-          "limit",
-          "has_more"
-        ],
-        "type": "object"
-      },
-      "UserConsumptionResponse": {
-        "properties": {
-          "consumption_by_date": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "type": "object"
-          },
-          "consumption_by_org_id": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "type": "object"
-          },
-          "total_acus": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "total_acus",
-          "consumption_by_date",
-          "consumption_by_org_id"
-        ],
-        "type": "object"
-      },
-      "SessionAnalysisIssue": {
-        "properties": {
-          "impact": {
-            "type": "string"
-          },
-          "issue": {
-            "type": "string"
-          },
-          "label": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "issue",
-          "impact",
-          "label"
-        ],
-        "type": "object"
-      },
-      "SessionAnalysisFeedbackItem": {
-        "properties": {
-          "details": {
-            "type": "string",
-            "nullable": true
-          },
-          "excerpt": {
-            "type": "string",
-            "nullable": true
-          },
-          "issue_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "issue_id",
-          "summary",
-          "excerpt",
-          "details"
-        ],
-        "type": "object"
-      },
-      "EnterpriseOrgCreate": {
-        "properties": {
-          "acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "add_creator_as_member": {
-            "default": true,
-            "type": "boolean"
-          },
-          "display_name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "display_name"
         ],
         "type": "object"
       },
@@ -2675,47 +2929,6 @@
         ],
         "type": "object"
       },
-      "PrMetrics": {
-        "properties": {
-          "prs_closed": {
-            "type": "integer"
-          },
-          "prs_merged": {
-            "type": "integer"
-          },
-          "prs_opened": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "prs_opened",
-          "prs_closed",
-          "prs_merged"
-        ],
-        "type": "object"
-      },
-      "EnterpriseMemberInviteResponse": {
-        "properties": {
-          "invited_count": {
-            "type": "integer"
-          },
-          "invitee_user_id_to_email": {
-            "additionalProperties": {
-              "type": "string"
-            },
-            "type": "object"
-          },
-          "status": {
-            "default": "success",
-            "type": "string"
-          }
-        },
-        "required": [
-          "invited_count",
-          "invitee_user_id_to_email"
-        ],
-        "type": "object"
-      },
       "SessionsMetrics": {
         "properties": {
           "sessions_count": {
@@ -2727,106 +2940,6 @@
         ],
         "type": "object"
       },
-      "SessionAnalysisActionItem": {
-        "properties": {
-          "action_item": {
-            "type": "string"
-          },
-          "issue_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "issue_id",
-          "type",
-          "action_item"
-        ],
-        "type": "object"
-      },
-      "EnterprisePlaybookResponse": {
-        "properties": {
-          "access": {
-            "type": "string"
-          },
-          "account_id": {
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "created_at": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true
-          },
-          "created_by_user_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "created_by_user_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "playbook_id": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "updated_at": {
-            "format": "date-time",
-            "type": "string",
-            "nullable": true
-          },
-          "updated_by_user_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "updated_by_user_name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "playbook_id",
-          "title",
-          "body",
-          "status",
-          "access",
-          "account_id",
-          "created_at",
-          "updated_at",
-          "created_by_user_id",
-          "created_by_user_name",
-          "updated_by_user_id",
-          "updated_by_user_name"
-        ],
-        "type": "object"
-      },
-      "OrganizationUpdate": {
-        "properties": {
-          "display_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "max_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          }
-        },
-        "type": "object"
-      },
       "SuccessResponse": {
         "properties": {
           "status": {
@@ -2836,22 +2949,55 @@
         },
         "type": "object"
       },
-      "RoleResponse": {
+      "UsageMetrics": {
         "properties": {
-          "role_id": {
-            "type": "string"
+          "prs_closed": {
+            "type": "integer"
           },
-          "role_name": {
-            "type": "string"
+          "prs_merged": {
+            "type": "integer"
           },
-          "role_type": {
-            "type": "string"
+          "prs_opened": {
+            "type": "integer"
+          },
+          "searches_count": {
+            "type": "integer"
+          },
+          "sessions_count": {
+            "type": "integer"
           }
         },
         "required": [
-          "role_id",
-          "role_name",
-          "role_type"
+          "sessions_count",
+          "searches_count",
+          "prs_opened",
+          "prs_closed",
+          "prs_merged"
+        ],
+        "type": "object"
+      },
+      "UserConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "consumption_by_org_id": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object"
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date",
+          "consumption_by_org_id"
         ],
         "type": "object"
       },
@@ -2881,152 +3027,6 @@
           "loc",
           "msg",
           "type"
-        ],
-        "type": "object"
-      },
-      "SessionAnalysisTimelineEvent": {
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "description"
-        ],
-        "type": "object"
-      },
-      "ServiceKeyRequest": {
-        "properties": {
-          "org_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "org_id"
-        ],
-        "type": "object"
-      },
-      "SessionAnalysisSuggestedPrompt": {
-        "properties": {
-          "feedback_items": {
-            "items": {
-              "$ref": "#/components/schemas/SessionAnalysisFeedbackItem"
-            },
-            "type": "array"
-          },
-          "original_prompt": {
-            "type": "string"
-          },
-          "suggested_prompt": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "original_prompt",
-          "suggested_prompt",
-          "feedback_items"
-        ],
-        "type": "object"
-      },
-      "RoleUpdateRequest": {
-        "properties": {
-          "role_id": {
-            "type": "string"
-          },
-          "user_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "user_ids",
-          "role_id"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_ApiKeyResponse_": {
-        "properties": {
-          "has_more": {
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ApiKeyResponse"
-            },
-            "type": "array"
-          },
-          "limit": {
-            "type": "integer"
-          },
-          "next_cursor": {
-            "type": "integer",
-            "nullable": true
-          },
-          "skip": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "items",
-          "total",
-          "skip",
-          "limit",
-          "has_more"
-        ],
-        "type": "object"
-      },
-      "EnterpriseIdpGroupsCreate": {
-        "properties": {
-          "group_names": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "group_names"
-        ],
-        "type": "object"
-      },
-      "ConsumptionResponse": {
-        "properties": {
-          "consumption_by_date": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "type": "object"
-          },
-          "consumption_by_org_id": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "type": "object"
-          },
-          "consumption_by_user": {
-            "additionalProperties": {
-              "type": "number"
-            },
-            "type": "object",
-            "nullable": true
-          },
-          "total_acus": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "total_acus",
-          "consumption_by_date",
-          "consumption_by_org_id"
         ],
         "type": "object"
       }

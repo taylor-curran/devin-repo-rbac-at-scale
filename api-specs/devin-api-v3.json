@@ -3295,648 +3295,23 @@
   },
   "components": {
     "schemas": {
-      "TagsResponse": {
+      "AcusByProduct": {
+        "description": "Breakdown of ACU consumption by product.",
         "properties": {
-          "tags": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "tags"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_GitPermissionResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/GitPermissionResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "UsageMetrics": {
-        "properties": {
-          "prs_created_count": {
-            "type": "integer"
-          },
-          "prs_merged_count": {
-            "type": "integer"
-          },
-          "searches_count": {
-            "type": "integer"
-          },
-          "sessions_count": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "sessions_count",
-          "searches_count",
-          "prs_created_count",
-          "prs_merged_count"
-        ],
-        "type": "object"
-      },
-      "TagsCreateRequest": {
-        "properties": {
-          "tags": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "tags"
-        ],
-        "type": "object"
-      },
-      "SelfResponse": {
-        "properties": {
-          "org_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "service_user_id": {
-            "type": "string"
-          },
-          "service_user_name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "service_user_id",
-          "service_user_name",
-          "org_id"
-        ],
-        "type": "object"
-      },
-      "OrganizationResponse": {
-        "properties": {
-          "created_at": {
-            "type": "integer"
-          },
-          "max_cycle_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "max_session_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "org_id": {
-            "type": "string"
-          },
-          "updated_at": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "org_id",
-          "name",
-          "created_at",
-          "updated_at",
-          "max_session_acu_limit",
-          "max_cycle_acu_limit"
-        ],
-        "type": "object"
-      },
-      "UserBulkCreateRequest": {
-        "properties": {
-          "emails": {
-            "items": {
-              "type": "string"
-            },
-            "maxItems": 100,
-            "type": "array"
-          },
-          "enterprise_role_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "emails",
-          "enterprise_role_id"
-        ],
-        "type": "object"
-      },
-      "SessionSecretInput": {
-        "description": "Input model for a session secret provided via API.",
-        "properties": {
-          "key": {
-            "maxLength": 256,
-            "minLength": 1,
-            "type": "string"
-          },
-          "sensitive": {
-            "default": true,
-            "type": "boolean"
-          },
-          "value": {
-            "maxLength": 65536,
-            "type": "string"
-          }
-        },
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object"
-      },
-      "GitPermissionResponse": {
-        "properties": {
-          "git_connection_id": {
-            "type": "string"
-          },
-          "git_permission_id": {
-            "type": "string"
-          },
-          "group_prefix": {
-            "type": "string",
-            "nullable": true
-          },
-          "prefix_path": {
-            "type": "string",
-            "nullable": true
-          },
-          "repo_path": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "git_permission_id",
-          "git_connection_id"
-        ],
-        "type": "object"
-      },
-      "User": {
-        "properties": {
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "role_assignments": {
-            "items": {
-              "$ref": "#/components/schemas/RoleAssignment"
-            },
-            "type": "array"
-          },
-          "user_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "user_id",
-          "email",
-          "name",
-          "role_assignments"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_AuditLogResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/AuditLogResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "IdpGroupUpdateRoleRequest": {
-        "properties": {
-          "role_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "role_id"
-        ],
-        "type": "object"
-      },
-      "UserUpdateRoleRequest": {
-        "properties": {
-          "role_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "role_id"
-        ],
-        "type": "object"
-      },
-      "GitConnectionResponse": {
-        "properties": {
-          "created_at": {
-            "type": "integer"
-          },
-          "git_connection_id": {
-            "type": "string"
-          },
-          "git_provider_type": {
-            "enum": [
-              "github_token",
-              "github_individual_token",
-              "github_app",
-              "gitlab_token",
-              "gitlab_oauth",
-              "azure_devops_oauth",
-              "bitbucket_oauth",
-              "bitbucket_token"
-            ],
-            "type": "string"
-          },
-          "host": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "git_connection_id",
-          "git_provider_type",
-          "name",
-          "host",
-          "created_at"
-        ],
-        "type": "object"
-      },
-      "GitPermissionCreateRequest": {
-        "properties": {
-          "git_connection_id": {
-            "type": "string"
-          },
-          "group_prefix": {
-            "type": "string",
-            "nullable": true
-          },
-          "prefix_path": {
-            "type": "string",
-            "nullable": true
-          },
-          "repo_path": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "git_connection_id"
-        ],
-        "type": "object"
-      },
-      "ProvisionServiceUserRequest": {
-        "properties": {
-          "name": {
-            "maxLength": 256,
-            "minLength": 1,
-            "type": "string"
-          },
-          "role_id": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "ttl_seconds": {
-            "exclusiveMinimum": true,
-            "maximum": 31536000,
-            "type": "integer",
-            "minimum": 0
-          }
-        },
-        "required": [
-          "name",
-          "role_id",
-          "ttl_seconds"
-        ],
-        "type": "object"
-      },
-      "SessionPullRequest": {
-        "properties": {
-          "pr_state": {
-            "type": "string",
-            "nullable": true
-          },
-          "pr_url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "pr_url",
-          "pr_state"
-        ],
-        "type": "object"
-      },
-      "ConsumptionByDateResponse": {
-        "properties": {
-          "acus": {
+          "devin": {
             "type": "number"
           },
-          "date": {
-            "type": "integer"
+          "cascade": {
+            "type": "number"
+          },
+          "terminal": {
+            "type": "number"
           }
         },
         "required": [
-          "date",
-          "acus"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_IdpGroupResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/IdpGroupResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "RoleAssignment": {
-        "properties": {
-          "org_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "role": {
-            "$ref": "#/components/schemas/Role"
-          }
-        },
-        "required": [
-          "role"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_OrganizationResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/OrganizationResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "ConsumptionCycle": {
-        "properties": {
-          "after": {
-            "type": "integer"
-          },
-          "before": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "before",
-          "after"
-        ],
-        "type": "object"
-      },
-      "HTTPValidationError": {
-        "properties": {
-          "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "type": "array"
-          }
-        },
-        "type": "object"
-      },
-      "KnowledgeNoteResponse": {
-        "properties": {
-          "access_type": {
-            "enum": [
-              "enterprise",
-              "org"
-            ],
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "integer"
-          },
-          "folder_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "is_enabled": {
-            "type": "boolean"
-          },
-          "name": {
-            "type": "string"
-          },
-          "note_id": {
-            "type": "string"
-          },
-          "org_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "trigger": {
-            "type": "string"
-          },
-          "updated_at": {
-            "type": "integer"
-          }
-        },
-        "required": [
-          "note_id",
-          "folder_id",
-          "name",
-          "body",
-          "trigger",
-          "is_enabled",
-          "created_at",
-          "updated_at",
-          "access_type",
-          "org_id"
-        ],
-        "type": "object"
-      },
-      "OrganizationCreateRequest": {
-        "properties": {
-          "max_cycle_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "max_session_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name"
-        ],
-        "type": "object"
-      },
-      "GitPermissionBulkCreateRequest": {
-        "properties": {
-          "permissions": {
-            "items": {
-              "$ref": "#/components/schemas/GitPermissionCreateRequest"
-            },
-            "maxItems": 200,
-            "type": "array"
-          }
-        },
-        "required": [
-          "permissions"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_SessionResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/SessionResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "SecretCreateRequest": {
-        "properties": {
-          "is_sensitive": {
-            "default": true,
-            "type": "boolean"
-          },
-          "key": {
-            "type": "string"
-          },
-          "note": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "enum": [
-              "cookie",
-              "key-value",
-              "totp"
-            ],
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "key",
-          "value"
+          "devin",
+          "cascade",
+          "terminal"
         ],
         "type": "object"
       },
@@ -4028,32 +3403,292 @@
         ],
         "type": "string"
       },
-      "PaginatedResponse_ServiceUser_": {
+      "AuditLogResponse": {
         "properties": {
-          "end_cursor": {
+          "action": {
+            "$ref": "#/components/schemas/AuditLogAction"
+          },
+          "audit_log_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "data": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "org_id": {
             "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
+            "nullable": true
           },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
+          "service_user_id": {
+            "type": "string",
+            "nullable": true
           },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ServiceUser"
-            },
-            "type": "array"
+          "service_user_name": {
+            "type": "string",
+            "nullable": true
           },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
+          "user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
-          "items"
+          "audit_log_id",
+          "action",
+          "created_at",
+          "org_id",
+          "user_id",
+          "user_email",
+          "service_user_id",
+          "service_user_name",
+          "data"
+        ],
+        "type": "object"
+      },
+      "ConsumptionByDateResponse": {
+        "properties": {
+          "acus": {
+            "type": "number"
+          },
+          "acus_by_product": {
+            "$ref": "#/components/schemas/AcusByProduct"
+          },
+          "date": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "acus",
+          "acus_by_product"
+        ],
+        "type": "object"
+      },
+      "ConsumptionCycle": {
+        "properties": {
+          "after": {
+            "type": "integer"
+          },
+          "before": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "before",
+          "after"
+        ],
+        "type": "object"
+      },
+      "ConsumptionResponse": {
+        "properties": {
+          "consumption_by_date": {
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionByDateResponse"
+            },
+            "type": "array"
+          },
+          "total_acus": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total_acus",
+          "consumption_by_date"
+        ],
+        "type": "object"
+      },
+      "GitConnectionResponse": {
+        "properties": {
+          "created_at": {
+            "type": "integer"
+          },
+          "git_connection_id": {
+            "type": "string"
+          },
+          "git_provider_type": {
+            "enum": [
+              "github_token",
+              "github_individual_token",
+              "github_app",
+              "gitlab_token",
+              "gitlab_oauth",
+              "azure_devops_oauth",
+              "bitbucket_oauth",
+              "bitbucket_token"
+            ],
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "git_connection_id",
+          "git_provider_type",
+          "name",
+          "host",
+          "created_at"
+        ],
+        "type": "object"
+      },
+      "GitPermissionBulkCreateRequest": {
+        "properties": {
+          "permissions": {
+            "items": {
+              "$ref": "#/components/schemas/GitPermissionCreateRequest"
+            },
+            "maxItems": 200,
+            "type": "array"
+          }
+        },
+        "required": [
+          "permissions"
+        ],
+        "type": "object"
+      },
+      "GitPermissionCreateRequest": {
+        "properties": {
+          "git_connection_id": {
+            "type": "string"
+          },
+          "group_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "repo_path": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "git_connection_id"
+        ],
+        "type": "object"
+      },
+      "GitPermissionResponse": {
+        "properties": {
+          "git_connection_id": {
+            "type": "string"
+          },
+          "git_permission_id": {
+            "type": "string"
+          },
+          "group_prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "prefix_path": {
+            "type": "string",
+            "nullable": true
+          },
+          "repo_path": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "git_permission_id",
+          "git_connection_id"
+        ],
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "HypervisorResponse": {
+        "properties": {
+          "cloud_provider_instance_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "hypervisor_id": {
+            "type": "string"
+          },
+          "last_heartbeat": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "utilization_percentage": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "hypervisor_id",
+          "status",
+          "utilization_percentage",
+          "created_at",
+          "last_heartbeat",
+          "cloud_provider_instance_id"
+        ],
+        "type": "object"
+      },
+      "IdpGroup": {
+        "properties": {
+          "idp_group_name": {
+            "type": "string"
+          },
+          "role_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/RoleAssignment"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "idp_group_name",
+          "role_assignments"
+        ],
+        "type": "object"
+      },
+      "IdpGroupResponse": {
+        "properties": {
+          "idp_group_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "idp_group_name"
+        ],
+        "type": "object"
+      },
+      "IdpGroupUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
         ],
         "type": "object"
       },
@@ -4070,6 +3705,321 @@
         },
         "required": [
           "idp_group_names"
+        ],
+        "type": "object"
+      },
+      "KnowledgeNoteCreateRequest": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "body",
+          "trigger"
+        ],
+        "type": "object"
+      },
+      "KnowledgeNoteResponse": {
+        "properties": {
+          "access_type": {
+            "enum": [
+              "enterprise",
+              "org"
+            ],
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "folder_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_enabled": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "note_id": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "note_id",
+          "folder_id",
+          "name",
+          "body",
+          "trigger",
+          "is_enabled",
+          "created_at",
+          "updated_at",
+          "access_type",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "OrganizationCreateRequest": {
+        "properties": {
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "OrganizationResponse": {
+        "properties": {
+          "created_at": {
+            "type": "integer"
+          },
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "org_id": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "org_id",
+          "name",
+          "created_at",
+          "updated_at",
+          "max_session_acu_limit",
+          "max_cycle_acu_limit"
+        ],
+        "type": "object"
+      },
+      "OrganizationUpdateRequest": {
+        "properties": {
+          "max_cycle_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "max_session_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "PaginatedResponse_AuditLogResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_ConsumptionCycle_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConsumptionCycle"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_GitConnectionResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GitConnectionResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_GitPermissionResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GitPermissionResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_HypervisorResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HypervisorResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_IdpGroupResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/IdpGroupResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
         ],
         "type": "object"
       },
@@ -4102,18 +4052,7 @@
         ],
         "type": "object"
       },
-      "IdpGroupResponse": {
-        "properties": {
-          "idp_group_name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "idp_group_name"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_User_": {
+      "PaginatedResponse_KnowledgeNoteResponse_": {
         "properties": {
           "end_cursor": {
             "type": "string",
@@ -4127,7 +4066,94 @@
           },
           "items": {
             "items": {
-              "$ref": "#/components/schemas/User"
+              "$ref": "#/components/schemas/KnowledgeNoteResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_OrganizationResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OrganizationResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_PlaybookResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlaybookResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_Role_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Role"
             },
             "type": "array"
           },
@@ -4168,6 +4194,482 @@
         },
         "required": [
           "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_ServiceUser_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ServiceUser"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_SessionResponse_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SessionResponse"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse_User_": {
+        "properties": {
+          "end_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Cursor to fetch the next page, or None if this is the last page."
+          },
+          "has_next_page": {
+            "default": false,
+            "description": "Whether there are more items available after this page.",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/User"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional total count (can be omitted for performance)."
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PlaybookCreateRequest": {
+        "properties": {
+          "body": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "type": "object"
+      },
+      "PlaybookResponse": {
+        "properties": {
+          "access_type": {
+            "enum": [
+              "enterprise",
+              "org"
+            ],
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "macro": {
+            "type": "string",
+            "nullable": true
+          },
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "integer"
+          },
+          "updated_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "playbook_id",
+          "title",
+          "body",
+          "macro",
+          "created_by",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "access_type",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "ProvisionServiceUserRequest": {
+        "properties": {
+          "name": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "role_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "ttl_seconds": {
+            "exclusiveMinimum": true,
+            "maximum": 31536000,
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "name",
+          "role_id",
+          "ttl_seconds"
+        ],
+        "type": "object"
+      },
+      "ProvisionedServiceUserResponse": {
+        "properties": {
+          "service_user": {
+            "$ref": "#/components/schemas/ServiceUser"
+          },
+          "token": {
+            "description": "The API token for the service user. This is only shown once at creation time.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "service_user",
+          "token"
+        ],
+        "type": "object"
+      },
+      "Role": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          },
+          "role_name": {
+            "type": "string"
+          },
+          "role_type": {
+            "enum": [
+              "enterprise",
+              "org"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_name",
+          "role_id",
+          "role_type"
+        ],
+        "type": "object"
+      },
+      "RoleAssignment": {
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        },
+        "required": [
+          "role"
+        ],
+        "type": "object"
+      },
+      "SecretCreateRequest": {
+        "properties": {
+          "is_sensitive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "key": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "enum": [
+              "cookie",
+              "key-value",
+              "totp"
+            ],
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "key",
+          "value"
+        ],
+        "type": "object"
+      },
+      "SecretResponse": {
+        "properties": {
+          "access_type": {
+            "enum": [
+              "org",
+              "personal"
+            ],
+            "type": "string"
+          },
+          "created_at": {
+            "type": "integer"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "is_sensitive": {
+            "type": "boolean"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "secret_id": {
+            "type": "string"
+          },
+          "secret_type": {
+            "enum": [
+              "cookie",
+              "key-value",
+              "totp"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret_id",
+          "key",
+          "note",
+          "is_sensitive",
+          "created_by",
+          "created_at",
+          "secret_type",
+          "access_type"
+        ],
+        "type": "object"
+      },
+      "SelfResponse": {
+        "properties": {
+          "org_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "service_user_id": {
+            "type": "string"
+          },
+          "service_user_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "service_user_id",
+          "service_user_name",
+          "org_id"
+        ],
+        "type": "object"
+      },
+      "ServiceUser": {
+        "properties": {
+          "expires_at": {
+            "type": "integer",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "role_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/RoleAssignment"
+            },
+            "type": "array"
+          },
+          "service_user_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "service_user_id",
+          "name",
+          "expires_at",
+          "role_assignments"
+        ],
+        "type": "object"
+      },
+      "ServiceUserUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
+        ],
+        "type": "object"
+      },
+      "SessionCreateRequest": {
+        "properties": {
+          "advanced_mode": {
+            "enum": [
+              "analyze",
+              "create",
+              "improve",
+              "batch",
+              "manage"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "bypass_approval": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "child_playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "create_as_user_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "knowledge_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "max_acu_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "playbook_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "repos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "secret_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "session_secrets": {
+            "items": {
+              "$ref": "#/components/schemas/SessionSecretInput"
+            },
+            "type": "array"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "type": "object"
+      },
+      "SessionPullRequest": {
+        "properties": {
+          "pr_state": {
+            "type": "string",
+            "nullable": true
+          },
+          "pr_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "pr_url",
+          "pr_state"
         ],
         "type": "object"
       },
@@ -4255,452 +4757,89 @@
         ],
         "type": "object"
       },
-      "PaginatedResponse_GitConnectionResponse_": {
+      "SessionSecretInput": {
+        "description": "Input model for a session secret provided via API.",
         "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/GitConnectionResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_ConsumptionCycle_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ConsumptionCycle"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "AuditLogResponse": {
-        "properties": {
-          "action": {
-            "$ref": "#/components/schemas/AuditLogAction"
-          },
-          "audit_log_id": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "integer"
-          },
-          "data": {
-            "additionalProperties": true,
-            "type": "object"
-          },
-          "org_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "service_user_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "service_user_name": {
-            "type": "string",
-            "nullable": true
-          },
-          "user_email": {
-            "type": "string",
-            "nullable": true
-          },
-          "user_id": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "required": [
-          "audit_log_id",
-          "action",
-          "created_at",
-          "org_id",
-          "user_id",
-          "user_email",
-          "service_user_id",
-          "service_user_name",
-          "data"
-        ],
-        "type": "object"
-      },
-      "KnowledgeNoteCreateRequest": {
-        "properties": {
-          "body": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "trigger": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "body",
-          "trigger"
-        ],
-        "type": "object"
-      },
-      "PlaybookResponse": {
-        "properties": {
-          "access_type": {
-            "enum": [
-              "enterprise",
-              "org"
-            ],
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          },
-          "created_at": {
-            "type": "integer"
-          },
-          "created_by": {
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "org_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "playbook_id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          },
-          "updated_at": {
-            "type": "integer"
-          },
-          "updated_by": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "playbook_id",
-          "title",
-          "body",
-          "macro",
-          "created_by",
-          "updated_by",
-          "created_at",
-          "updated_at",
-          "access_type",
-          "org_id"
-        ],
-        "type": "object"
-      },
-      "SecretResponse": {
-        "properties": {
-          "access_type": {
-            "enum": [
-              "org",
-              "personal"
-            ],
-            "type": "string"
-          },
-          "created_at": {
-            "type": "integer"
-          },
-          "created_by": {
-            "type": "string"
-          },
-          "is_sensitive": {
-            "type": "boolean"
-          },
           "key": {
-            "type": "string",
-            "nullable": true
-          },
-          "note": {
-            "type": "string",
-            "nullable": true
-          },
-          "secret_id": {
+            "maxLength": 256,
+            "minLength": 1,
             "type": "string"
           },
-          "secret_type": {
-            "enum": [
-              "cookie",
-              "key-value",
-              "totp"
-            ],
+          "sensitive": {
+            "default": true,
+            "type": "boolean"
+          },
+          "value": {
+            "maxLength": 65536,
             "type": "string"
           }
         },
         "required": [
-          "secret_id",
           "key",
-          "note",
-          "is_sensitive",
-          "created_by",
-          "created_at",
-          "secret_type",
-          "access_type"
+          "value"
         ],
         "type": "object"
       },
-      "ProvisionedServiceUserResponse": {
+      "TagsCreateRequest": {
         "properties": {
-          "service_user": {
-            "$ref": "#/components/schemas/ServiceUser"
-          },
-          "token": {
-            "description": "The API token for the service user. This is only shown once at creation time.",
-            "type": "string"
-          }
-        },
-        "required": [
-          "service_user",
-          "token"
-        ],
-        "type": "object"
-      },
-      "HypervisorResponse": {
-        "properties": {
-          "cloud_provider_instance_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "created_at": {
-            "type": "integer",
-            "nullable": true
-          },
-          "hypervisor_id": {
-            "type": "string"
-          },
-          "last_heartbeat": {
-            "type": "integer",
-            "nullable": true
-          },
-          "status": {
-            "type": "string"
-          },
-          "utilization_percentage": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "hypervisor_id",
-          "status",
-          "utilization_percentage",
-          "created_at",
-          "last_heartbeat",
-          "cloud_provider_instance_id"
-        ],
-        "type": "object"
-      },
-      "PlaybookCreateRequest": {
-        "properties": {
-          "body": {
-            "type": "string"
-          },
-          "macro": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "title",
-          "body"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_PlaybookResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/PlaybookResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_HypervisorResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/HypervisorResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "SessionCreateRequest": {
-        "properties": {
-          "advanced_mode": {
-            "enum": [
-              "analyze",
-              "create",
-              "improve",
-              "batch",
-              "manage"
-            ],
-            "type": "string",
-            "nullable": true
-          },
-          "bypass_approval": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "child_playbook_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "create_as_user_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "knowledge_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "max_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "playbook_id": {
-            "type": "string",
-            "nullable": true
-          },
-          "prompt": {
-            "type": "string"
-          },
-          "repos": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "secret_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "session_links": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "session_secrets": {
-            "items": {
-              "$ref": "#/components/schemas/SessionSecretInput"
-            },
-            "type": "array"
-          },
           "tags": {
             "items": {
               "type": "string"
             },
             "type": "array"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
           }
         },
         "required": [
-          "prompt"
+          "tags"
         ],
         "type": "object"
       },
-      "ServiceUser": {
+      "TagsResponse": {
         "properties": {
-          "expires_at": {
-            "type": "integer",
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "tags"
+        ],
+        "type": "object"
+      },
+      "UsageMetrics": {
+        "properties": {
+          "prs_created_count": {
+            "type": "integer"
+          },
+          "prs_merged_count": {
+            "type": "integer"
+          },
+          "searches_count": {
+            "type": "integer"
+          },
+          "sessions_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sessions_count",
+          "searches_count",
+          "prs_created_count",
+          "prs_merged_count"
+        ],
+        "type": "object"
+      },
+      "User": {
+        "properties": {
+          "email": {
+            "type": "string",
             "nullable": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "role_assignments": {
             "items": {
@@ -4708,33 +4847,46 @@
             },
             "type": "array"
           },
-          "service_user_id": {
+          "user_id": {
             "type": "string"
           }
         },
         "required": [
-          "service_user_id",
+          "user_id",
+          "email",
           "name",
-          "expires_at",
           "role_assignments"
         ],
         "type": "object"
       },
-      "OrganizationUpdateRequest": {
+      "UserBulkCreateRequest": {
         "properties": {
-          "max_cycle_acu_limit": {
-            "type": "integer",
-            "nullable": true
+          "emails": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "type": "array"
           },
-          "max_session_acu_limit": {
-            "type": "integer",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
+          "enterprise_role_id": {
+            "type": "string"
           }
         },
+        "required": [
+          "emails",
+          "enterprise_role_id"
+        ],
+        "type": "object"
+      },
+      "UserUpdateRoleRequest": {
+        "properties": {
+          "role_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "role_id"
+        ],
         "type": "object"
       },
       "ValidationError": {
@@ -4763,134 +4915,6 @@
           "loc",
           "msg",
           "type"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_KnowledgeNoteResponse_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/KnowledgeNoteResponse"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "Role": {
-        "properties": {
-          "role_id": {
-            "type": "string"
-          },
-          "role_name": {
-            "type": "string"
-          },
-          "role_type": {
-            "enum": [
-              "enterprise",
-              "org"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "role_name",
-          "role_id",
-          "role_type"
-        ],
-        "type": "object"
-      },
-      "ServiceUserUpdateRoleRequest": {
-        "properties": {
-          "role_id": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "role_id"
-        ],
-        "type": "object"
-      },
-      "IdpGroup": {
-        "properties": {
-          "idp_group_name": {
-            "type": "string"
-          },
-          "role_assignments": {
-            "items": {
-              "$ref": "#/components/schemas/RoleAssignment"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "idp_group_name",
-          "role_assignments"
-        ],
-        "type": "object"
-      },
-      "PaginatedResponse_Role_": {
-        "properties": {
-          "end_cursor": {
-            "type": "string",
-            "nullable": true,
-            "description": "Cursor to fetch the next page, or None if this is the last page."
-          },
-          "has_next_page": {
-            "default": false,
-            "description": "Whether there are more items available after this page.",
-            "type": "boolean"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/Role"
-            },
-            "type": "array"
-          },
-          "total": {
-            "type": "integer",
-            "nullable": true,
-            "description": "Optional total count (can be omitted for performance)."
-          }
-        },
-        "required": [
-          "items"
-        ],
-        "type": "object"
-      },
-      "ConsumptionResponse": {
-        "properties": {
-          "consumption_by_date": {
-            "items": {
-              "$ref": "#/components/schemas/ConsumptionByDateResponse"
-            },
-            "type": "array"
-          },
-          "total_acus": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "total_acus",
-          "consumption_by_date"
         ],
         "type": "object"
       }

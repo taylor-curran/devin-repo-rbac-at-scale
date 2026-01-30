@@ -328,8 +328,9 @@ def create_version_spec(version: str, specs: list[dict]) -> dict:
                                 "description": f"The {param.replace('_', ' ')}"
                             })
     
-    # Sort paths
+    # Sort paths and schemas alphabetically for deterministic output
     merged["paths"] = dict(sorted(merged["paths"].items()))
+    merged["components"]["schemas"] = dict(sorted(merged["components"]["schemas"].items()))
     
     return merged
 
