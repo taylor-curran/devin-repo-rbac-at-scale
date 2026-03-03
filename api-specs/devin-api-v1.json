@@ -828,10 +828,17 @@
             "type": "string",
             "nullable": true
           },
+          "structured_output_schema": {
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true,
+            "description": "JSON Schema (Draft 7) for validating structured output. Max 64KB. Must be self-contained (no external $ref)."
+          },
           "tags": {
             "items": {
               "type": "string"
             },
+            "maxItems": 50,
             "type": "array",
             "description": "List of tags to add to the session."
           },
@@ -900,6 +907,7 @@
             "items": {
               "type": "string"
             },
+            "maxItems": 50,
             "type": "array"
           }
         },

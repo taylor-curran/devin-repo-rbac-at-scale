@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch official OpenAPI specs from Devin API documentation.
-Generates SEPARATE spec files for v1, v2, and v3beta1.
+Generates SEPARATE spec files for v1, v2, and v3.
 
 Auto-discovers endpoints by scraping the docs sidebar navigation.
 """
@@ -55,8 +55,44 @@ def discover_endpoints_from_sidebar(version: str) -> list[str]:
     Auto-discover all endpoint documentation pages by scraping the docs sidebar.
     This ensures we never miss new endpoints.
     """
-    overview_url = f"{BASE_URL}/api-reference/{version}/overview"
-    print(f"  🔍 Discovering {version} endpoints from {overview_url}...")
+    # For v3, scrape multiple category pages since the sidebar only expands one section at a time
+    if version == "v3":
+        # List of category pages to scrape - covers both Organization API and Enterprise API
+        v3_category_pages = [
+            # Organization API sections
+            "/api-reference/v3/sessions/organizations-sessions",
+            "/api-reference/v3/notes/organizations-knowledge-notes",
+            "/api-reference/v3/playbooks/organizations-playbooks",
+            "/api-reference/v3/secrets/organizations-secrets",
+            "/api-reference/v3/schedules/organizations-schedules",
+            "/api-reference/v3/attachments/post-organizations-attachments",
+            "/api-reference/v3/repositories/organizations-repositories",
+            # Enterprise API sections
+            "/api-reference/v3/organizations/organizations",
+            "/api-reference/v3/sessions/enterprise-sessions",
+            "/api-reference/v3/users/members-users",
+            "/api-reference/v3/roles/roles",
+            "/api-reference/v3/service-users/members-service-users",
+            "/api-reference/v3/idp-groups/enterprise-idp-groups",
+            "/api-reference/v3/tags/organizations-tags",
+            "/api-reference/v3/audit-logs/enterprise-audit-logs",
+            "/api-reference/v3/git-connections/git-providers-connections",
+            "/api-reference/v3/git-permissions/organizations-git-providers-permissions",
+            "/api-reference/v3/consumption/consumption-cycles",
+            "/api-reference/v3/metrics/metrics-usage",
+            "/api-reference/v3/notes/enterprise-knowledge-notes",
+            "/api-reference/v3/playbooks/enterprise-playbooks",
+            "/api-reference/v3/hypervisors/hypervisors",
+            "/api-reference/v3/ip-access-list/enterprise-ip-access-list",
+            "/api-reference/v3/acu-limits/enterprise-acu-limits",
+            "/api-reference/v3/org-group-limits/org-group-limits",
+            "/api-reference/v3/queue/enterprise-queue",
+            "/api-reference/v3/self/self",
+        ]
+        return discover_v3_endpoints_from_multiple_pages(v3_category_pages)
+    else:
+        overview_url = f"{BASE_URL}/api-reference/{version}/overview"
+        print(f"  🔍 Discovering {version} endpoints from {overview_url}...")
     
     try:
         response = requests.get(overview_url, timeout=30)
@@ -90,6 +126,41 @@ def discover_endpoints_from_sidebar(version: str) -> list[str]:
         print(f"  ❌ Error discovering endpoints: {e}")
         return []
 
+
+def discover_v3_endpoints_from_multiple_pages(category_pages: list[str]) -> list[str]:
+    """
+    Discover v3 endpoints by scraping multiple category pages.
+    This is needed because the v3 sidebar only expands one section at a time.
+    """
+    print(f"  🔍 Discovering v3 endpoints from {len(category_pages)} category pages...")
+    
+    endpoints = set()
+    version_pattern = "/api-reference/v3/"
+    
+    for page_path in category_pages:
+        try:
+            url = f"{BASE_URL}{page_path}"
+            response = requests.get(url, timeout=30)
+            if response.status_code != 200:
+                continue
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            for link in soup.find_all('a', href=True):
+                href = link['href']
+                if href.startswith(version_pattern):
+                    if '/overview' in href or '/usage-examples' in href:
+                        continue
+                    parts = href.replace(version_pattern, '').split('/')
+                    if len(parts) >= 2:
+                        endpoints.add(href)
+        except Exception:
+            continue
+    
+    discovered = sorted(list(endpoints))
+    print(f"  ✅ Discovered {len(discovered)} endpoints from sidebar")
+    return discovered
+
 VERSION_INFO = {
     "v1": {
         "title": "Devin API v1",
@@ -102,9 +173,9 @@ VERSION_INFO = {
         "version": "2.0.0"
     },
     "v3": {
-        "title": "Devin API v3beta1",
-        "description": "Devin API v3beta1 - Full RBAC support with service user authentication for enterprise and organization management.",
-        "version": "3.0.0-beta1"
+        "title": "Devin API v3",
+        "description": "Devin API v3 - Full RBAC support with service user authentication for enterprise and organization management.",
+        "version": "3.0.0"
     }
 }
 
@@ -327,6 +398,14 @@ def create_version_spec(version: str, specs: list[dict]) -> dict:
                                 "schema": {"type": "string"},
                                 "description": f"The {param.replace('_', ' ')}"
                             })
+    
+    # Normalize v3beta1 paths to v3 (some docs pages haven't been updated yet)
+    if version == "v3":
+        normalized_paths = {}
+        for path, methods in merged["paths"].items():
+            normalized_path = path.replace("/v3beta1/", "/v3/")
+            normalized_paths[normalized_path] = methods
+        merged["paths"] = normalized_paths
     
     # Sort paths and schemas alphabetically for deterministic output
     merged["paths"] = dict(sorted(merged["paths"].items()))
